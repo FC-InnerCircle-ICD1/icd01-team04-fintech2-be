@@ -13,6 +13,14 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/incer-member" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/incer-member" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/incer-payment" />
         <option name="modules">
           <set>
