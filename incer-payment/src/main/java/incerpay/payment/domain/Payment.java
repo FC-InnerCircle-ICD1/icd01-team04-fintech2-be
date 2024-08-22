@@ -4,13 +4,17 @@ import incerpay.payment.domain.vo.PaymentProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.Cascade;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
 
+@Accessors(fluent = true)
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -32,6 +36,13 @@ public class Payment {
 
     private Instant createdAt;
     private Instant expiredAt;
+
+    public void approve(Clock clock) {
+        this.paymentApproved = PaymentApproved.builder()
+                .paymentProperty(this.paymentProperty)
+                .approvedAt(clock.instant())
+                .build();
+    }
 
     public void cancel(Clock clock) {
         this.paymentCanceled = PaymentCanceled.builder()

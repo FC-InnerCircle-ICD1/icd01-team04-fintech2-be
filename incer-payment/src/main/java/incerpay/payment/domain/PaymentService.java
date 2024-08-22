@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class PaymentService {
@@ -23,8 +25,17 @@ public class PaymentService {
     public PaymentStatusView pay(PayCommand command) {
         validator.validate(command);
         Payment payment = command.toEntity(clockManager.getClock());
+        UUID id = repository.save(payment);
+        return viewer.readPayment(id);
+    }
+
+    @Transactional
+    public PaymentStatusView approve(PaymentCancelCommand command) {
+        validator.validate(command);
+        Payment payment = repository.findById(command.paymentId()).orElseThrow(()-> new RuntimeException("Payment Entity Not Found"));
+        payment.approve(clockManager.getClock());
         repository.save(payment);
-        return viewer.readPayment(payment);
+        return viewer.readPayment(payment.id());
     }
 
     @Transactional
@@ -33,6 +44,8 @@ public class PaymentService {
         Payment payment = repository.findById(command.paymentId()).orElseThrow(()-> new RuntimeException("Payment Entity Not Found"));
         payment.cancel(clockManager.getClock());
         repository.save(payment);
-        return viewer.readPayment(payment);
+        return viewer.readPayment(payment.id());
     }
+
+
 }
