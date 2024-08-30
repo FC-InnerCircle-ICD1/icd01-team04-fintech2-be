@@ -1,6 +1,6 @@
 package incerpay.payment.common.config;
 
-import incerpay.payment.common.lib.ClockManager;
+import incerpay.payment.common.lib.clock.ClockManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
