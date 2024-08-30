@@ -13,17 +13,19 @@ import java.time.LocalDateTime;
 public record PaymentRequestCommand(
         // buyer 정보
         String sellerId,
-        Money amount,
+        Long amount,
         LocalDateTime expiredAt
 
 ){
     public PaymentRequestCommand {
-        if (amount.isNegativeOrZero()) {
+        Money _amount = Money.of(amount, "KRW");
+        if (_amount.isNegativeOrZero()) {
             throw new RequestParameterException("Amount must be positive");
         }
     }
 
     public Payment toEntity(Clock clock) {
+        Money amount = Money.of(this.amount, "KRW");
         return Payment.builder()
                 .paymentProperty(PaymentProperty.builder()
                         .amount(amount)

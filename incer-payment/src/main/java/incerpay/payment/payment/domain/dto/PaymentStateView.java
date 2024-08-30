@@ -9,6 +9,9 @@ public record PaymentStateView(
         UUID paymentId,
         String sellerId,
         PaymentState state,
-        Money amount
+        Long amount
 ) {
+    public PaymentStateView(UUID paymentId, String sellerId, PaymentState state, Money amount) {
+        this(paymentId, sellerId, state, amount.getNumber().longValue());
+    }
 }

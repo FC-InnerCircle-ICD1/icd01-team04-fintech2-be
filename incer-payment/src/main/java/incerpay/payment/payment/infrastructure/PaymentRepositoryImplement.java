@@ -8,6 +8,7 @@ import incerpay.payment.payment.domain.component.PaymentViewer;
 import incerpay.payment.payment.domain.component.PaymentRepository;
 import incerpay.payment.payment.domain.dto.PaymentStateView;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 import static incerpay.payment.payment.domain.entity.QPayment.payment;
 
+@Slf4j
 @RequiredArgsConstructor
 @Repository
 public class PaymentRepositoryImplement implements PaymentRepository, PaymentViewer {
@@ -26,6 +28,8 @@ public class PaymentRepositoryImplement implements PaymentRepository, PaymentVie
 
     @Override
     public void save(Payment payment) {
+        // id와 상태 log
+        log.info("Payment Id : {} - {}", payment.id() == null ? "new request" : payment.id(), payment.state());
         jpaRepository.save(payment);
     }
 

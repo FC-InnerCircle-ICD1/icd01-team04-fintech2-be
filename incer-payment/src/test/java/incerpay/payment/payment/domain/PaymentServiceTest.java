@@ -2,15 +2,12 @@ package incerpay.payment.payment.domain;
 
 import incerpay.payment.payment.domain.dto.*;
 import incerpay.payment.payment.domain.vo.PaymentState;
-import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.Currency;
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +23,7 @@ public class PaymentServiceTest {
         public void request_성공() {
             PaymentRequestCommand command = new PaymentRequestCommand(
                     "testRequestSellerId",
-                    Money.of(100, Currency.getInstance(Locale.KOREA).getCurrencyCode()),
+                    100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
@@ -47,7 +44,7 @@ public class PaymentServiceTest {
             // Initiate a payment
             PaymentRequestCommand command = new PaymentRequestCommand(
                     "testApproveSellerId",
-                    Money.of(100, Currency.getInstance(Locale.KOREA).getCurrencyCode()),
+                    100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
@@ -74,7 +71,7 @@ public class PaymentServiceTest {
             // Initiate a payment
             PaymentRequestCommand command = new PaymentRequestCommand(
                     "testCancelSellerId",
-                    Money.of(100, Currency.getInstance(Locale.KOREA).getCurrencyCode()),
+                    100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
@@ -104,7 +101,7 @@ public class PaymentServiceTest {
             // Initiate a payment
             PaymentRequestCommand command = new PaymentRequestCommand(
                     "testRejectSellerId",
-                    Money.of(100, Currency.getInstance(Locale.KOREA).getCurrencyCode()),
+                    100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
@@ -131,7 +128,7 @@ public class PaymentServiceTest {
             // Initialize a payment
             PaymentRequestCommand command = new PaymentRequestCommand(
                     "testSellerId",
-                    Money.of(100, Currency.getInstance(Locale.KOREA).getCurrencyCode()),
+                    100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
