@@ -57,16 +57,16 @@ public class PaymentGatewayService {
     }
 
     @Transactional
-    public PaymentStateView readStatusByPaymentId(String paymentId, String publicKey) {
-        PaymentIdentification id = new PaymentIdentification(paymentId, publicKey);
+    public PaymentStateView readStatusByPaymentId(String paymentId) {
+        PaymentIdentification id = new PaymentIdentification(paymentId);
         validator.validate(id);
         ApiStatusView apiView = paymentApiAdapter.readStatus(id);
         return viewer.read(apiView);
     }
 
     @Transactional
-    public PaymentStateView readStatusByTransactionId(String transactionId, String publicKey) {
-        TransactionIdentification id = new TransactionIdentification(transactionId, publicKey);
+    public PaymentStateView readStatusByTransactionId(String transactionId) {
+        TransactionIdentification id = new TransactionIdentification(transactionId);
         validator.validate(id);
         ApiStatusView apiView = paymentApiAdapter.readStatus(id);
         return viewer.read(apiView);

@@ -1,4 +1,4 @@
-package incerpay.paygate.infrastructure;
+package incerpay.paygate.infrastructure.external;
 
 import incerpay.paygate.domain.vo.PaymentIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
@@ -13,7 +13,7 @@ public class CardPaymentApi {
 
     public void cancel(CardApiCancelCommand command){}
 
-    public void pay(CardApiApproveCommand cardApiApproveCommand){}
+    public void pay(CardApiApproveCommand command){}
 
     public void readStatus(TransactionIdentification command){}
 
