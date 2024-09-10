@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ApiKeyService implements AssignApiKeyUseCase {
 
-    private final ApiKeyInfoAdaptor apiKeyInfoAdaptor;
-    @Override
-    public String assignApiKey(String sellerId, ApiKeyState apiKeyState) {
-        String apiKey = ApiKeyGenerator.generateUniqueKey(apiKeyState);
-        apiKeyInfoAdaptor.save(new ApiKeyInfoEntity(apiKey,sellerId,apiKeyState));
-        return apiKey;
-    }
+	private final ApiKeyInfoAdaptor apiKeyInfoAdaptor;
+
+	@Override
+	public String assignApiKey(String sellerId, ApiKeyState apiKeyState) {
+		String apiKey = ApiKeyGenerator.generateUniqueKey(apiKeyState);
+		// todo : 어댑터에 도메인으로 넘기고, 도메인 -> 엔티티 변환과정은 어디에서 하는가?
+		apiKeyInfoAdaptor.save(new ApiKeyInfoEntity(apiKey, sellerId, apiKeyState));
+		return apiKey;
+	}
 
 }

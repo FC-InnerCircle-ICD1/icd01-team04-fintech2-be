@@ -1,6 +1,5 @@
 package com.incerpay.incerceller.adapter.out.persistence;
 
-import com.incerpay.incerceller.common.domain.BaseEntity;
 import com.incerpay.incerceller.domain.ApiKeyState;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,5 +19,8 @@ public class ApiKeyInfoEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ApiKeyState apiKeyState;
+
+    // todo: 토스에선 왜 버전관리를?
+   // private Long apiVersion;
 
 }

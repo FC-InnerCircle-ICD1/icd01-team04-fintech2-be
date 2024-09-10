@@ -1,4 +1,4 @@
-package com.incerpay.incerceller.common.domain;
+package com.incerpay.incerceller.adapter.out.persistence;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
