@@ -1,9 +1,7 @@
 package incerpay.paygate.application.service;
 
-import incerpay.paygate.domain.component.CardApiAdapter;
-import incerpay.paygate.domain.component.CardPersistenceAdapter;
-import incerpay.paygate.domain.component.CardGatewayValidator;
-import incerpay.paygate.domain.component.CardGatewayViewer;
+import incerpay.paygate.application.factory.PaymentApiAdapterFactory;
+import incerpay.paygate.domain.component.*;
 import incerpay.paygate.domain.vo.PaymentIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
 import incerpay.paygate.presentation.dto.in.*;
@@ -19,15 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PaymentGatewayService {
 
-    private final CardGatewayValidator validator;
-    private final CardGatewayViewer viewer;
-    private final CardApiAdapter paymentApiAdapter;
-    private final CardPersistenceAdapter persistenceAdapter;
+    private final PaymentGatewayValidator validator;
+    private final PaymentGatewayViewer viewer;
+    private final PaymentPersistenceAdapter persistenceAdapter;
+    private final PaymentApiAdapterFactory paymentApiAdapterFactory;
+    private final CommonApiAdapter commonApiAdapter;
 
     @Transactional
     public PaymentStateView request(PaymentRequestCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = paymentApiAdapter.request(command);
+        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
+        ApiAdapterView apiView = adapter.request(command);
         PersistenceView pv = persistenceAdapter.request(command);
         return viewer.read(pv);
     }
@@ -35,7 +35,8 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView confirm(PaymentApproveCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = paymentApiAdapter.confirm(command);
+        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
+        ApiAdapterView apiView = adapter.confirm(command);
         PersistenceView pv = persistenceAdapter.approve(command);
         return viewer.read(pv);
     }
@@ -43,7 +44,8 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView cancel(PaymentCancelCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = paymentApiAdapter.cancel(command);
+        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
+        ApiAdapterView apiView = adapter.cancel(command);
         PersistenceView pv = persistenceAdapter.cancel(command);
         return viewer.read(pv);
     }
@@ -51,7 +53,8 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView reject(PaymentRejectCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = paymentApiAdapter.reject(command);
+        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
+        ApiAdapterView apiView = adapter.reject(command);
         PersistenceView pv = persistenceAdapter.reject(command);
         return viewer.read(pv);
     }
@@ -60,7 +63,7 @@ public class PaymentGatewayService {
     public PaymentStateView readStatusByPaymentId(String paymentId) {
         PaymentIdentification id = new PaymentIdentification(paymentId);
         validator.validate(id);
-        ApiStatusView apiView = paymentApiAdapter.readStatus(id);
+        ApiStatusView apiView = commonApiAdapter.readStatus(id);
         return viewer.read(apiView);
     }
 
@@ -68,7 +71,7 @@ public class PaymentGatewayService {
     public PaymentStateView readStatusByTransactionId(String transactionId) {
         TransactionIdentification id = new TransactionIdentification(transactionId);
         validator.validate(id);
-        ApiStatusView apiView = paymentApiAdapter.readStatus(id);
+        ApiStatusView apiView = commonApiAdapter.readStatus(id);
         return viewer.read(apiView);
     }
 
