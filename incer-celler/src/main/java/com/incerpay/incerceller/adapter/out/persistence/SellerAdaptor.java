@@ -10,21 +10,14 @@ import com.incerpay.incerceller.mapper.SellerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class ApiKeyInfoAdaptor implements SaveLiveApiKeyPort {
+public class SellerAdaptor implements SelectSellerPort {
 
-    private final ApiKeyInfoRepository apiKeyInfoRepository;
     private final SellerRepository sellerRepository;
     private final SellerMapper sellerMapper;
-
-    @Override
-    public void save(ApiKeyInfoEntity apiKeyInfo) {
-        apiKeyInfoRepository.save(apiKeyInfo);
-    }
 
     @Override
     public Seller selectSeller(Long sellerId) {
