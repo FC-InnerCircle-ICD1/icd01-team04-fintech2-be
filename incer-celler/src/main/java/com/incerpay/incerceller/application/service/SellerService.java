@@ -1,0 +1,39 @@
+package com.incerpay.incerceller.application.service;
+
+import com.incerpay.incerceller.application.port.in.ApproveSellerUseCase;
+import com.incerpay.incerceller.application.port.in.GetSellerUseCase;
+import com.incerpay.incerceller.application.port.out.SelectSellerPort;
+import com.incerpay.incerceller.application.port.out.UpdateSellerPort;
+import com.incerpay.incerceller.domain.Seller;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class SellerService implements GetSellerUseCase, ApproveSellerUseCase {
+
+	private final SelectSellerPort selectSellerPort;
+	private final UpdateSellerPort updateSellerPort;
+
+	@Override
+	public List<Seller> getSellers(Long adminId) {
+		//todo :validator 추가
+		return selectSellerPort.selectSellers(adminId);
+	}
+
+	@Override
+	public Seller getSeller(Long sellerId) {
+		return selectSellerPort.selectSeller(sellerId);
+	}
+
+	@Override
+	@Transactional
+	public void approveSeller(Long id) {
+		updateSellerPort.updateSeller(id);
+	}
+
+}

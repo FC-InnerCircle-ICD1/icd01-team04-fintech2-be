@@ -4,7 +4,7 @@ import com.incerpay.incerceller.domain.Seller;
 
 import java.util.List;
 
-public interface FindSellerUseCase {
-	List<Seller> findSellers(Long adminId);
-	Seller findSeller(Long sellerId);
+public interface GetSellerUseCase {
+	List<Seller> getSellers(Long adminId);
+	Seller getSeller(Long sellerId);
 }

@@ -3,6 +3,7 @@ package com.incerpay.incerceller.domain;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -11,5 +12,7 @@ public class Seller {
 	private Long sellerId;
 	private String sellerName;
 	private Long adminId;
+	private Boolean approveStatus;
+	private LocalDateTime approveDate;
 	private List<ApiKeyInfo> apiKeyInfos;
 }
