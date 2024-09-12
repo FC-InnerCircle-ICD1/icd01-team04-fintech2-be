@@ -20,9 +20,9 @@ public class SellerService implements GetSellerUseCase, ApproveSellerUseCase {
 	private final UpdateSellerPort updateSellerPort;
 
 	@Override
-	public List<Seller> getSellers(Long adminId) {
+	public List<Seller> getSellers(Long userId) {
 		//todo :validator 추가
-		return selectSellerPort.selectSellers(adminId);
+		return selectSellerPort.selectSellers(userId);
 	}
 
 	@Override

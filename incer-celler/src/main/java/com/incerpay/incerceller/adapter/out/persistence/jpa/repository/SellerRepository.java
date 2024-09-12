@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface SellerRepository extends JpaRepository<SellerEntity, Long> {
 
-	List<SellerEntity> findAllByAdminId(Long adminId);
+	List<SellerEntity> findAllByUserId(Long userId);
 
 }

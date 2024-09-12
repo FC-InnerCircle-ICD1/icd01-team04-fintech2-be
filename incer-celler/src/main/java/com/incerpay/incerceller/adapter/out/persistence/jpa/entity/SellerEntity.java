@@ -21,7 +21,7 @@ public class SellerEntity extends BaseEntity {
 
 	private String sellerName;
 
-	private Long adminId;
+	private Long userId;
 
 	private LocalDateTime approveDate;
 	private Boolean approveStatus;

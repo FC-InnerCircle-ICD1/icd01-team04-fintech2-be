@@ -25,8 +25,8 @@ public class SellerAdaptor implements SelectSellerPort, UpdateSellerPort {
 	}
 
 	@Override
-	public List<Seller> selectSellers(Long adminId) {
-		return sellerRepository.findAllByAdminId(adminId)
+	public List<Seller> selectSellers(Long userId) {
+		return sellerRepository.findAllByUserId(userId)
 				.stream().map(sellerMapper::toDomain).toList();
 	}
 

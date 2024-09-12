@@ -22,7 +22,7 @@ public class SellerMapper {
 
 	public Seller toDomain(SellerEntity sellerEntity) {
 		return Seller.builder()
-				.adminId(sellerEntity.getAdminId())
+				.userId(sellerEntity.getUserId())
 				.sellerName(sellerEntity.getSellerName())
 				.sellerId(sellerEntity.getSellerId())
 				.apiKeyInfos(sellerEntity.getApiKeyInfos().stream()

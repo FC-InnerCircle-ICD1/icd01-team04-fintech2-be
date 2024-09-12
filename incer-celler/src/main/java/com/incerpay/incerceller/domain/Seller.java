@@ -11,7 +11,7 @@ import java.util.List;
 public class Seller {
 	private Long sellerId;
 	private String sellerName;
-	private Long adminId;
+	private Long userId;
 	private Boolean approveStatus;
 	private LocalDateTime approveDate;
 	private List<ApiKeyInfo> apiKeyInfos;
