@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface SellerRepository extends JpaRepository<SellerEntity, Long> {
 
-	List<SellerEntity> findAllByUserId(Long userId);
+	List<SellerEntity> findAllByCustomerId(Long customerId);
 
 }

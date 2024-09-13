@@ -20,11 +20,18 @@ public class SellerMapper {
 				.build();
 	}
 
+	public SellerEntity toSaveEntity(Seller seller) {
+		return SellerEntity.builder()
+				.customerId(seller.getCustomerId())
+				.sellerName(seller.getSellerName())
+				.build();
+	}
+
 	public Seller toDomain(SellerEntity sellerEntity) {
 		return Seller.builder()
-				.userId(sellerEntity.getUserId())
 				.sellerName(sellerEntity.getSellerName())
 				.sellerId(sellerEntity.getSellerId())
+				.customerId(sellerEntity.getCustomerId())
 				.apiKeyInfos(sellerEntity.getApiKeyInfos().stream()
 						.map(apikeyInfoMapper::toDomain).toList())
 				.build();
