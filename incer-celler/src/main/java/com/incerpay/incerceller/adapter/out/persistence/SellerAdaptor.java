@@ -35,7 +35,6 @@ public class SellerAdaptor implements SelectSellerPort, UpdateSellerPort {
 		SellerEntity seller = sellerRepository.findById(sellerId)
 				.orElseThrow(() -> new IllegalArgumentException("상점을 찾을 수 없습니다."));
 
-		seller.updateApprove();
 	}
 
 }

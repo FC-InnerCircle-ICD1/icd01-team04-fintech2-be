@@ -1,6 +1,5 @@
 package com.incerpay.incerceller.application.service;
 
-import com.incerpay.incerceller.application.port.in.ApproveSellerUseCase;
 import com.incerpay.incerceller.application.port.in.GetSellerUseCase;
 import com.incerpay.incerceller.application.port.out.SelectSellerPort;
 import com.incerpay.incerceller.application.port.out.UpdateSellerPort;
@@ -14,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class SellerService implements GetSellerUseCase, ApproveSellerUseCase {
+public class SellerService implements GetSellerUseCase {
 
 	private final SelectSellerPort selectSellerPort;
 	private final UpdateSellerPort updateSellerPort;
@@ -28,12 +27,6 @@ public class SellerService implements GetSellerUseCase, ApproveSellerUseCase {
 	@Override
 	public Seller getSeller(Long sellerId) {
 		return selectSellerPort.selectSeller(sellerId);
-	}
-
-	@Override
-	@Transactional
-	public void approveSeller(Long id) {
-		updateSellerPort.updateSeller(id);
 	}
 
 }

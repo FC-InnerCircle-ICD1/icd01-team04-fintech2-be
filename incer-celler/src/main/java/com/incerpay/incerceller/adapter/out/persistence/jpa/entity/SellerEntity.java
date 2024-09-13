@@ -21,18 +21,10 @@ public class SellerEntity extends BaseEntity {
 
 	private String sellerName;
 
-	private Long userId;
-
-	private LocalDateTime approveDate;
-	private Boolean approveStatus;
+	private Long customerId;
 
 	@OneToMany
 	@JoinColumn(name = "seller_id")  // 외래 키를 명시적으로 설정
 	private List<ApiKeyInfoEntity> apiKeyInfos;  // 엔티티 타입으로 수정
-
-	public void updateApprove() {
-		this.approveStatus = true;
-		this.approveDate = LocalDateTime.now();
-	}
 
 }
