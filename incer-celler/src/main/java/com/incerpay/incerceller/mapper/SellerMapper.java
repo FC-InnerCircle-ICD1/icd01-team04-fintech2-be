@@ -13,7 +13,6 @@ public class SellerMapper {
 
 	public SellerEntity toEntity(Seller seller) {
 		return SellerEntity.builder()
-				.sellerId(seller.getSellerId())
 				.sellerName(seller.getSellerName())
 				.apiKeyInfos(seller.getApiKeyInfos().stream()
 						.map(apikeyInfoMapper::toEntity).toList())
@@ -22,7 +21,7 @@ public class SellerMapper {
 
 	public SellerEntity toSaveEntity(Seller seller) {
 		return SellerEntity.builder()
-				.customerId(seller.getCustomerId())
+				.sellerId(seller.getSellerId())
 				.sellerName(seller.getSellerName())
 				.build();
 	}
@@ -31,7 +30,6 @@ public class SellerMapper {
 		return Seller.builder()
 				.sellerName(sellerEntity.getSellerName())
 				.sellerId(sellerEntity.getSellerId())
-				.customerId(sellerEntity.getCustomerId())
 				.apiKeyInfos(sellerEntity.getApiKeyInfos().stream()
 						.map(apikeyInfoMapper::toDomain).toList())
 				.build();

@@ -26,9 +26,9 @@ public class SellerService implements GetSellerUseCase, AssignSellerUseCase {
 
 	@Override
 	@Transactional
-	public void assignSeller(Long customerId, String sellerName) {
+	public void assignSeller(Long sellerId, String sellerName) {
 		saveSellerPort.saveSeller(Seller.builder()
-				.customerId(customerId)
+				.sellerId(sellerId)
 				.sellerName(sellerName).build());
 	}
 

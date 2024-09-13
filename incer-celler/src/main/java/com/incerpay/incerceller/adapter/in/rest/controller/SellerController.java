@@ -23,11 +23,11 @@ public class SellerController implements SellerControllerDocs {
 
 	@Override
 	@PostMapping
-	public ResponseEntity<?> assignSeller(@RequestParam Long customerId, @RequestParam String sellerName) {
-		assignSellerUseCase.assignSeller(customerId, sellerName);
+	public ResponseEntity<?> assignSeller(@RequestParam Long sellerId, @RequestParam String sellerName) {
+		assignSellerUseCase.assignSeller(sellerId, sellerName);
 		return ResponseEntity.ok("등록 성공");
 	}
 
-	// todo : 상점 수정 기능
+	// todo :
 
 }

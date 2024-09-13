@@ -19,6 +19,6 @@ public interface SellerControllerDocs {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "성공"),
 			@ApiResponse(responseCode = "500", description = "실패")})
-	ResponseEntity<?> assignSeller(@RequestParam Long customerId, @RequestParam String sellerName);
+	ResponseEntity<?> assignSeller(@RequestParam Long sellerId, @RequestParam String sellerName);
 
 }

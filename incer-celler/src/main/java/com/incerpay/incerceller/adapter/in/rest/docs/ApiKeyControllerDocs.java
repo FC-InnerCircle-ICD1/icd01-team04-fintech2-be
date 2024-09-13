@@ -14,6 +14,6 @@ public interface ApiKeyControllerDocs {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "생성성공"),
 			@ApiResponse(responseCode = "500", description = "생성실패")})
-	ResponseEntity<?> assignApiKey(@Schema(description = "상점ID") @RequestParam String sellerId, @RequestParam ApiKeyState apiKeyState);
+	ResponseEntity<?> assignApiKey(@Schema(description = "상점ID") @RequestParam Long sellerId, @RequestParam ApiKeyState apiKeyState);
 
 }

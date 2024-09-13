@@ -19,7 +19,7 @@ public class ApiKeyController implements ApiKeyControllerDocs {
 
 	@Override
 	@GetMapping
-	public ResponseEntity<?> assignApiKey(@RequestParam String sellerId, @RequestParam ApiKeyState apiKeyState) {
+	public ResponseEntity<?> assignApiKey(@RequestParam Long sellerId, @RequestParam ApiKeyState apiKeyState) {
 		return ResponseEntity.ok(assignApiKeyUseCase.assignApiKey(sellerId, apiKeyState));
 	}
 

@@ -5,7 +5,9 @@ import com.incerpay.incerceller.adapter.out.persistence.jpa.repository.SellerRep
 import com.incerpay.incerceller.application.port.out.SaveSellerPort;
 import com.incerpay.incerceller.application.port.out.SelectSellerPort;
 import com.incerpay.incerceller.application.port.out.UpdateSellerPort;
+import com.incerpay.incerceller.domain.ApiKeyInfo;
 import com.incerpay.incerceller.domain.Seller;
+import com.incerpay.incerceller.mapper.ApikeyInfoMapper;
 import com.incerpay.incerceller.mapper.SellerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,7 @@ public class SellerAdaptor implements SelectSellerPort, UpdateSellerPort, SaveSe
 
 	private final SellerRepository sellerRepository;
 	private final SellerMapper sellerMapper;
+	private final ApikeyInfoMapper apikeyInfoMapper;
 
 	@Override
 	public Seller selectSeller(Long sellerId) {
@@ -24,10 +27,10 @@ public class SellerAdaptor implements SelectSellerPort, UpdateSellerPort, SaveSe
 	}
 
 	@Override
-	public void updateSeller(Long sellerId) {
+	public void updateSellerApiKey(Long sellerId, ApiKeyInfo apiKey) {
 		SellerEntity seller = sellerRepository.findById(sellerId)
 				.orElseThrow(() -> new IllegalArgumentException("상점을 찾을 수 없습니다."));
-
+		seller.addApiKeyInfo(apikeyInfoMapper.toEntity(apiKey));
 	}
 
 	@Override

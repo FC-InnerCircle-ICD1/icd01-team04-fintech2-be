@@ -3,6 +3,9 @@ package com.incerpay.incerceller.application.service;
 import com.incerpay.incerceller.adapter.out.persistence.jpa.entity.ApiKeyInfoEntity;
 import com.incerpay.incerceller.application.port.in.AssignApiKeyUseCase;
 import com.incerpay.incerceller.application.port.out.SaveLiveApiKeyPort;
+import com.incerpay.incerceller.application.port.out.SaveSellerPort;
+import com.incerpay.incerceller.application.port.out.UpdateSellerPort;
+import com.incerpay.incerceller.domain.ApiKeyInfo;
 import com.incerpay.incerceller.domain.ApiKeyState;
 import com.incerpay.incerceller.util.ApiKeyGenerator;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApiKeyService implements AssignApiKeyUseCase {
 
 	private final SaveLiveApiKeyPort saveLiveApiKeyPort;
+	private final UpdateSellerPort updateSellerPort;
 
 	@Override
 	@Transactional
-	public String assignApiKey(String sellerId, ApiKeyState apiKeyState) {
+	public String assignApiKey(Long sellerId, ApiKeyState apiKeyState) {
 		String apiKey = ApiKeyGenerator.generateUniqueKey(apiKeyState);
-		saveLiveApiKeyPort.save(new ApiKeyInfoEntity(apiKey, apiKeyState));
+
+		ApiKeyInfo apiKeyInfo = ApiKeyInfo
+				.builder()
+				.apiKeyState(apiKeyState)
+				.apiKey(apiKey)
+				.build();
+
+		saveLiveApiKeyPort.save(apiKeyInfo);
+
+		updateSellerPort.updateSellerApiKey(sellerId, apiKeyInfo);
+
 		return apiKey;
 	}
 

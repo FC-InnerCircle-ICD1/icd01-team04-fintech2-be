@@ -1,5 +1,6 @@
 package com.incerpay.incerceller.adapter.out.persistence.jpa.entity;
 
+import com.incerpay.incerceller.domain.ApiKeyInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,15 +17,16 @@ import java.util.List;
 @Getter
 public class SellerEntity extends BaseEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long sellerId;
 
 	private String sellerName;
 
-	private Long customerId;
-
 	@OneToMany
 	@JoinColumn(name = "seller_id")  // 외래 키를 명시적으로 설정
 	private List<ApiKeyInfoEntity> apiKeyInfos;  // 엔티티 타입으로 수정
+
+	public void addApiKeyInfo(ApiKeyInfoEntity apiKeyInfo) {
+		apiKeyInfos.add(apiKeyInfo);
+	}
 
 }

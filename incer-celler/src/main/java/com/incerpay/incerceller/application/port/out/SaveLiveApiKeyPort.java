@@ -1,7 +1,7 @@
 package com.incerpay.incerceller.application.port.out;
 
-import com.incerpay.incerceller.adapter.out.persistence.jpa.entity.ApiKeyInfoEntity;
+import com.incerpay.incerceller.domain.ApiKeyInfo;
 
 public interface SaveLiveApiKeyPort {
-    void save(ApiKeyInfoEntity apiKeyInfo);
+    void save(ApiKeyInfo apiKeyInfo);
 }

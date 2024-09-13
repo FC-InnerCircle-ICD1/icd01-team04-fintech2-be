@@ -9,7 +9,6 @@ import java.util.List;
 @Builder
 public class Seller {
 	private Long sellerId;
-	private Long customerId;
 	private String sellerName;
 	private List<ApiKeyInfo> apiKeyInfos;
 }
