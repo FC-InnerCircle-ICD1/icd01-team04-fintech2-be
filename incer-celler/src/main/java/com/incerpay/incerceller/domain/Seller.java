@@ -11,4 +11,11 @@ public class Seller {
 	private Long sellerId;
 	private String sellerName;
 	private List<ApiKeyInfo> apiKeyInfos;
+
+	public boolean hasApiKeyInfo(ApiKeyInfo targetApiKey) {
+		return this.apiKeyInfos.stream()
+				.anyMatch(apiKeyInfo -> apiKeyInfo.isApiKeyInfo(targetApiKey));
+	}
+
+
 }

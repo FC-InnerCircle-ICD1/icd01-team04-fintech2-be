@@ -1,12 +1,15 @@
 package com.incerpay.incerceller.application.service;
 
-import com.incerpay.incerceller.adapter.out.persistence.jpa.entity.ApiKeyInfoEntity;
+import com.incerpay.incerceller.application.dto.AssignApiKeyRequest;
+import com.incerpay.incerceller.application.dto.ConfirmApiKeyRequest;
 import com.incerpay.incerceller.application.port.in.AssignApiKeyUseCase;
-import com.incerpay.incerceller.application.port.out.SaveLiveApiKeyPort;
-import com.incerpay.incerceller.application.port.out.SaveSellerPort;
+import com.incerpay.incerceller.application.port.in.GetSellerUseCase;
+import com.incerpay.incerceller.application.port.in.VerifyApiKeyUseCase;
+import com.incerpay.incerceller.application.port.out.SaveApiKeyPort;
+import com.incerpay.incerceller.application.port.out.SelectApiKeyPort;
 import com.incerpay.incerceller.application.port.out.UpdateSellerPort;
 import com.incerpay.incerceller.domain.ApiKeyInfo;
-import com.incerpay.incerceller.domain.ApiKeyState;
+import com.incerpay.incerceller.domain.Seller;
 import com.incerpay.incerceller.util.ApiKeyGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,27 +18,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ApiKeyService implements AssignApiKeyUseCase {
+public class ApiKeyService implements AssignApiKeyUseCase, VerifyApiKeyUseCase {
 
-	private final SaveLiveApiKeyPort saveLiveApiKeyPort;
+	private final SaveApiKeyPort saveApiKeyPort;
+	private final SelectApiKeyPort selectApiKeyPort;
 	private final UpdateSellerPort updateSellerPort;
+	private final GetSellerUseCase getSellerUseCase;
 
 	@Override
 	@Transactional
-	public String assignApiKey(Long sellerId, ApiKeyState apiKeyState) {
-		String apiKey = ApiKeyGenerator.generateUniqueKey(apiKeyState);
+	public String assignApiKey(AssignApiKeyRequest assignApiKeyRequest) {
+		String apiKey = ApiKeyGenerator.generateUniqueKey(assignApiKeyRequest.apiKeyState());
 
 		ApiKeyInfo apiKeyInfo = ApiKeyInfo
 				.builder()
-				.apiKeyState(apiKeyState)
+				.apiKeyState(assignApiKeyRequest.apiKeyState())
 				.apiKey(apiKey)
 				.build();
 
-		saveLiveApiKeyPort.save(apiKeyInfo);
+		saveApiKeyPort.save(apiKeyInfo);
 
-		updateSellerPort.updateSellerApiKey(sellerId, apiKeyInfo);
+		updateSellerPort.updateSellerApiKey(assignApiKeyRequest.sellerId(), apiKeyInfo);
 
 		return apiKey;
+	}
+
+	@Override
+	public boolean vertifyApiKey(ConfirmApiKeyRequest confirmApiKeyRequest) {
+		Seller seller = getSellerUseCase.getSeller(confirmApiKeyRequest.sellerId());
+		return seller.hasApiKeyInfo(confirmApiKeyRequest.apiKeyInfo());
+		// 포트의 기능은 단순 데이터 가져오는 역할만 하는가? 검증하는 기능은 어디들어가야할까?
 	}
 
 }

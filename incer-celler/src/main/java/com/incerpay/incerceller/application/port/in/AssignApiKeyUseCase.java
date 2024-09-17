@@ -1,8 +1,7 @@
 package com.incerpay.incerceller.application.port.in;
 
-import com.incerpay.incerceller.domain.ApiKeyState;
+import com.incerpay.incerceller.application.dto.AssignApiKeyRequest;
 
 public interface AssignApiKeyUseCase {
-    String assignApiKey(Long sellerId, ApiKeyState apiKeyState);
-
+    String assignApiKey(AssignApiKeyRequest assignApiKeyRequest);
 }

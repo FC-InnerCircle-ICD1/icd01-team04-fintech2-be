@@ -1,4 +1,4 @@
-package com.incerpay.incerceller.adapter.in.rest.dto;
+package com.incerpay.incerceller.application.dto;
 
 /**
  * 상점 등록 요청서
