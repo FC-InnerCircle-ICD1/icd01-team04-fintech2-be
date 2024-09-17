@@ -8,6 +8,7 @@ public record CardApiApproveView(
         PaymentState state,
         LocalDateTime requestedAt,
         Long paymentAmount,
-        String paymentId
+        String paymentId,
+        String transactionId
 ) {}
 
