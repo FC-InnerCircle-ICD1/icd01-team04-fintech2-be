@@ -1,6 +1,9 @@
 package incerpay.paygate.domain.component;
 
 import incerpay.paygate.infrastructure.external.CardPaymentApi;
+import incerpay.paygate.infrastructure.external.dto.CardApiApproveView;
+import incerpay.paygate.infrastructure.external.dto.CardApiCancelView;
+import incerpay.paygate.infrastructure.external.dto.CardApiCertifyView;
 import incerpay.paygate.presentation.dto.in.*;
 import incerpay.paygate.presentation.dto.out.ApiAdapterView;
 import org.springframework.stereotype.Component;
@@ -19,28 +22,28 @@ public class CardApiAdapter implements PaymentApiAdapter {
     @Override
     public ApiAdapterView request(PaymentRequestCommand paymentRequestCommand) {
         CardApiCertifyCommand command = mapper.toApiCertifyCommand(paymentRequestCommand);
-        api.certify(command);
+        CardApiCertifyView view = api.certify(command);
         return createApiAdapterView();
     }
 
     @Override
     public ApiAdapterView cancel(PaymentCancelCommand paymentCancelCommand) {
         CardApiCancelCommand command = mapper.toApiCancelCommand(paymentCancelCommand);
-        api.cancel(command);
+        CardApiCancelView view = api.cancel(command);
         return createApiAdapterView();
     }
 
     @Override
     public ApiAdapterView reject(PaymentRejectCommand paymentRejectCommand) {
         CardApiCancelCommand command = mapper.toApiCancelCommand(paymentRejectCommand);
-        api.cancel(command);
+        CardApiCancelView view = api.cancel(command);
         return createApiAdapterView();
     }
 
     @Override
     public ApiAdapterView confirm(PaymentApproveCommand paymentApproveCommand) {
         CardApiApproveCommand command = mapper.toApiApproveCommand(paymentApproveCommand);
-        api.pay(command);
+        CardApiApproveView view = api.pay(command);
         return createApiAdapterView();
     }
     
