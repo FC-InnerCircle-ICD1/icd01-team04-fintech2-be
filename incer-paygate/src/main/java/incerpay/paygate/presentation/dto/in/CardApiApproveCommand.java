@@ -1,13 +1,12 @@
 package incerpay.paygate.presentation.dto.in;
 
 public record CardApiApproveCommand(
-        int price,
+        String customerId,
+        int installmentPeriod,
+        Long price,
         String cardNumber,
         String cvc,
         String expireDate,
-        String cardCompany,
-        int installmentPeriod,
-        String customerId,
-        String paymentType
+        String cardCompany
 ) {}
 

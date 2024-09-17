@@ -9,7 +9,6 @@ public class CardPaymentDetails implements PaymentMethodDetails {
     String cvc;
     String expireDate;
     String cardCompany;
-    String customerId;
 
     public CardPaymentDetails() {}
 
@@ -18,12 +17,28 @@ public class CardPaymentDetails implements PaymentMethodDetails {
             @JsonProperty("cardNumber") String cardNumber,
             @JsonProperty("cvc") String cvc,
             @JsonProperty("expireDate") String expireDate,
-            @JsonProperty("cardCompany") String cardCompany,
-            @JsonProperty("customerId") String customerId) {
+            @JsonProperty("cardCompany") String cardCompany
+    ) {
         this.cardNumber = cardNumber;
         this.cvc = cvc;
         this.expireDate = expireDate;
         this.cardCompany = cardCompany;
-        this.customerId = customerId;
     }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public String getCvc() {
+        return cvc;
+    }
+
+    public String getExpireDate() {
+        return expireDate;
+    }
+
+    public String getCardCompany() {
+        return cardCompany;
+    }
+
 }

@@ -6,6 +6,7 @@ import incerpay.paygate.presentation.dto.PaymentMethodDetails;
 import java.math.BigDecimal;
 
 public record PaymentRequestCommand(
+     String customerId,
      String orderId,
      BigDecimal amount,
      PaymentType type,

@@ -8,38 +8,43 @@ import org.springframework.stereotype.Component;
 @Component
 public class CardApiAdapter implements PaymentApiAdapter {
 
-    private final CardPaymentApi cardPaymentApi;
-    public CardApiAdapter(CardPaymentApi cardPaymentApi) {
-        this.cardPaymentApi = cardPaymentApi;
+    private final CardPaymentApi api;
+    private final PaymentCardApiMapper mapper;
+
+    public CardApiAdapter(CardPaymentApi api, PaymentCardApiMapper mapper) {
+        this.api = api;
+        this.mapper = mapper;
     }
 
     @Override
     public ApiAdapterView request(PaymentRequestCommand paymentRequestCommand) {
-        CardApiCertifyCommand command = null;
-        cardPaymentApi.certify(command);
-        return null;
+        CardApiCertifyCommand command = mapper.toApiCertifyCommand(paymentRequestCommand);
+        api.certify(command);
+        return createApiAdapterView();
     }
 
     @Override
     public ApiAdapterView cancel(PaymentCancelCommand paymentCancelCommand) {
-        CardApiCancelCommand command = null;
-        cardPaymentApi.cancel(command);
-        return null;
+        CardApiCancelCommand command = mapper.toApiCancelCommand(paymentCancelCommand);
+        api.cancel(command);
+        return createApiAdapterView();
     }
 
     @Override
     public ApiAdapterView reject(PaymentRejectCommand paymentRejectCommand) {
-        CardApiCancelCommand command = null;
-        cardPaymentApi.cancel(command);
-        return null;
+        CardApiCancelCommand command = mapper.toApiCancelCommand(paymentRejectCommand);
+        api.cancel(command);
+        return createApiAdapterView();
     }
 
     @Override
     public ApiAdapterView confirm(PaymentApproveCommand paymentApproveCommand) {
-        CardApiApproveCommand command = null;
-        cardPaymentApi.pay(command);
+        CardApiApproveCommand command = mapper.toApiApproveCommand(paymentApproveCommand);
+        api.pay(command);
+        return createApiAdapterView();
+    }
+    
+    private ApiAdapterView createApiAdapterView() {
         return null;
     }
-
-
 }
