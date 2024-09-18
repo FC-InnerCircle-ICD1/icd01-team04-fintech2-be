@@ -115,11 +115,11 @@ public class Payment {
         finish(now);
     }
 
-    public void reconcile(Clock clock) {
+    public void settle(Clock clock) {
         Instant now = clock.instant();
         this.paymentProperty = PaymentProperty.builder()
                 .amount(this.paymentProperty.amount())
-                .state(PaymentState.RECONCILED)
+                .state(PaymentState.SETTLED)
                 .registeredAt(now)
                 .build();
         PaymentLedger reconciled = PaymentLedger.builder()

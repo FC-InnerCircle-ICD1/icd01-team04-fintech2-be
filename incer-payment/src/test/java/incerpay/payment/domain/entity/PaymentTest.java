@@ -125,10 +125,10 @@ public class PaymentTest {
             payment.approve(controlledClock);
 
             // Act - Reconcile
-            payment.reconcile(controlledClock);
+            payment.settle(controlledClock);
 
             // Assert
-            assertEquals(PaymentState.RECONCILED, payment.paymentProperty().state());
+            assertEquals(PaymentState.SETTLED, payment.paymentProperty().state());
             assertEquals(2, payment.paymentLedgers().size());
         }
     }

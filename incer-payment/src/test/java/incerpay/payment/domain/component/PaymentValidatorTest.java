@@ -50,7 +50,7 @@ public class PaymentValidatorTest {
         void testValidateForChangeState_정산된_결제() {
             Payment payment = Payment.of("testSeller", 100L, Instant.now());
             payment.approve(Clock.system(ZoneId.of("Asia/Seoul")));
-            payment.reconcile(Clock.system(ZoneId.of("Asia/Seoul")));
+            payment.settle(Clock.system(ZoneId.of("Asia/Seoul")));
 
             assertThrows(PaymentStateException.class, () -> validator.validateForChangeState(payment)
                     , "결제 상태가 변경할 수 없습니다.");
@@ -88,9 +88,9 @@ public class PaymentValidatorTest {
         void validateForReconcile_정산된_결제() {
             Payment payment = Payment.of("testSeller", 100L, Instant.now());
             payment.approve(Clock.system(ZoneId.of("Asia/Seoul")));
-            payment.reconcile(Clock.system(ZoneId.of("Asia/Seoul")));
+            payment.settle(Clock.system(ZoneId.of("Asia/Seoul")));
 
-            assertThrows(PaymentStateException.class, () -> validator.validateForReconcile(payment)
+            assertThrows(PaymentStateException.class, () -> validator.validateForSettled(payment)
                     , "이미 정산된 결제입니다.");
         }
 
@@ -98,7 +98,7 @@ public class PaymentValidatorTest {
         void validateForReconcile_승인되지_않은_결제() {
             Payment payment = Payment.of("testSeller", 100L, Instant.now());
 
-            assertThrows(PaymentStateException.class, () -> validator.validateForReconcile(payment)
+            assertThrows(PaymentStateException.class, () -> validator.validateForSettled(payment)
                     , "승인된 결제만 정산할 수 있습니다.");
         }
     }
