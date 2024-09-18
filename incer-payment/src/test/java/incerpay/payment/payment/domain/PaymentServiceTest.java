@@ -1,7 +1,8 @@
 package incerpay.payment.payment.domain;
 
-import incerpay.payment.payment.domain.dto.*;
-import incerpay.payment.payment.domain.vo.PaymentState;
+import incerpay.payment.common.dto.*;
+import incerpay.payment.domain.PaymentService;
+import incerpay.payment.domain.vo.PaymentState;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class PaymentServiceTest {
                     LocalDateTime.now().plusSeconds(30)
             );
 
-            PaymentStateView actualView = service.request(command);
+            PaymentView actualView = service.request(command);
 
             System.out.println(actualView);
             assertNotNull(actualView);
@@ -49,13 +50,13 @@ public class PaymentServiceTest {
             );
 
             // Quote a payment
-            PaymentStateView createdPayment = service.request(command);
+            PaymentView createdPayment = service.request(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
 
             // Approve the created payment
             PaymentApproveCommand approveCommand = new PaymentApproveCommand(createdPayment.paymentId());
-            PaymentStateView approvedPayment = service.approve(approveCommand);
+            PaymentView approvedPayment = service.approve(approveCommand);
 
             // Validate the updated payment status
             assertNotNull(approvedPayment);
@@ -76,17 +77,17 @@ public class PaymentServiceTest {
             );
 
             // Quote a payment
-            PaymentStateView createdPayment = service.request(command);
+            PaymentView createdPayment = service.request(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
             PaymentApproveCommand approveCommand = new PaymentApproveCommand(createdPayment.paymentId());
-            PaymentStateView approvedPayment = service.approve(approveCommand);
+            PaymentView approvedPayment = service.approve(approveCommand);
             assertNotNull(approvedPayment);
             assertEquals(PaymentState.APPROVED, approvedPayment.state());
 
             // Cancel the created payment
             PaymentCancelCommand cancelCommand = new PaymentCancelCommand(createdPayment.paymentId());
-            PaymentStateView cancelledPayment = service.cancel(cancelCommand);
+            PaymentView cancelledPayment = service.cancel(cancelCommand);
 
             // Validate the updated payment status
             assertNotNull(cancelledPayment);
@@ -106,13 +107,13 @@ public class PaymentServiceTest {
             );
 
             // Request a payment
-            PaymentStateView createdPayment = service.request(command);
+            PaymentView createdPayment = service.request(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
 
             // Reject the created payment
             PaymentRejectCommand rejectCommand = new PaymentRejectCommand(createdPayment.paymentId());
-            PaymentStateView rejectedPayment = service.reject(rejectCommand);
+            PaymentView rejectedPayment = service.reject(rejectCommand);
 
             // Validate the updated payment status
             assertNotNull(rejectedPayment);
@@ -132,7 +133,7 @@ public class PaymentServiceTest {
                     LocalDateTime.now().plusSeconds(30)
             );
 
-            PaymentStateView createdPayment = service.request(command);
+            PaymentView createdPayment = service.request(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
 
