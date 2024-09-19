@@ -63,6 +63,7 @@ public class Payment {
     }
 
     public void approve(Clock clock) {
+        PaymentState currentState = this.paymentProperty.state();
         this.paymentProperty = PaymentProperty.builder()
                 .amount(this.paymentProperty.amount())
                 .state(PaymentState.APPROVED)
@@ -72,7 +73,26 @@ public class Payment {
                 .paymentProperty(this.paymentProperty)
                 .build();
         this.paymentLedgers.add(approved);
-        this.paymentWallet.conduct(this.paymentProperty.amount());
+        switch (currentState) {
+            case PENDING -> {}
+        }
+    }
+
+    public void confirm(Clock clock) {
+        Instant now = clock.instant();
+        PaymentState currentState = this.paymentProperty.state();
+        this.paymentProperty = PaymentProperty.builder()
+                .amount(this.paymentProperty.amount())
+                .state(PaymentState.CONFIRMED)
+                .registeredAt(now)
+                .build();
+        PaymentLedger confirmed = PaymentLedger.builder()
+                .paymentProperty(this.paymentProperty)
+                .build();
+        this.paymentLedgers.add(confirmed);
+        switch (currentState){
+            case APPROVED -> this.paymentWallet.conduct(this.paymentProperty.amount());
+        }
     }
 
     public void cancel(Clock clock) {
@@ -88,9 +108,8 @@ public class Payment {
                 .build();
         this.paymentLedgers.add(canceled);
         switch (currentState){
-            case PENDING -> {}
-            case APPROVED -> this.paymentWallet.deduct(this.paymentProperty.amount());
-            default -> throw new PaymentStateException("결제 상태를 변경할 수 없습니다.");
+            case PENDING, APPROVED -> {}
+            case CONFIRMED -> this.paymentWallet.deduct(this.paymentProperty.amount());
         }
         finish(now);
     }
@@ -108,31 +127,33 @@ public class Payment {
                 .build();
         this.paymentLedgers.add(rejected);
         switch (currentState){
-            case PENDING -> {}
-            case APPROVED -> this.paymentWallet.deduct(this.paymentProperty.amount());
-            default -> throw new PaymentStateException("결제 상태를 변경할 수 없습니다.");
+            case PENDING, APPROVED -> {}
+            case CONFIRMED -> this.paymentWallet.deduct(this.paymentProperty.amount());
         }
         finish(now);
     }
 
-    public void reconcile(Clock clock) {
+    public void settle(Clock clock) {
         Instant now = clock.instant();
+        PaymentState currentState = this.paymentProperty.state();
         this.paymentProperty = PaymentProperty.builder()
                 .amount(this.paymentProperty.amount())
-                .state(PaymentState.RECONCILED)
+                .state(PaymentState.SETTLED)
                 .registeredAt(now)
                 .build();
-        PaymentLedger reconciled = PaymentLedger.builder()
+        PaymentLedger settled = PaymentLedger.builder()
                 .paymentProperty(this.paymentProperty)
                 .build();
-        this.paymentLedgers.add(reconciled);
-        this.paymentWallet.deduct(this.paymentProperty.amount());
+        this.paymentLedgers.add(settled);
+        switch (currentState) {
+            case CONFIRMED -> this.paymentWallet.deduct(this.paymentProperty.amount());
+        }
         finish(now);
     }
 
     public void finish(Instant instant) {
         if(!this.paymentWallet.isEmpty()){
-            throw new PaymentStateException("결제가 완료되지 않았습니다.");
+            throw new PaymentStateException("결제가 완료되지 않았습니다. - paymentId: %s".formatted(this.id));
         }
         this.finishedAt = instant;
     }

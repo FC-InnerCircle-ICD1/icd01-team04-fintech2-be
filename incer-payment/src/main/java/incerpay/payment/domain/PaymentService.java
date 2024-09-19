@@ -22,7 +22,7 @@ public class PaymentService {
     private final PaymentFactory factory;
 
     @Transactional
-    public PaymentView request(PaymentRequestCommand command) {
+    public PaymentView quote(PaymentQuoteCommand command) {
         Payment payment = factory.create(command);
         repository.save(payment);
         return viewer.readPayment(payment.id());
@@ -58,12 +58,24 @@ public class PaymentService {
         return viewer.readPayment(payment.id());
     }
 
+    @Transactional
+    public PaymentView confirm(PaymentConfirmCommand command) {
+        Payment payment = repository.findById(command.paymentId())
+                .orElseThrow(()-> new PersistentNotFoundException("Payment Not Found"));
+        validator.validateForConfirm(payment);
+        payment.confirm(clockManager.getClock());
+        repository.save(payment);
+        return viewer.readPayment(payment.id());
+    }
+
     @Transactional(readOnly = true)
     public PaymentListView readBySellerId(String sellerId) {
         return viewer.readBySellerId(sellerId);
     }
 
+    @Transactional(readOnly = true)
     public PaymentDetailView readDetailBySellerId(String sellerId, String paymentId) {
         return viewer.readDetailBySellerId(sellerId, paymentId);
     }
+
 }
