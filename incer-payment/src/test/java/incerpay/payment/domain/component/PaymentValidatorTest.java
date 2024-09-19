@@ -21,8 +21,7 @@ public class PaymentValidatorTest {
         @Test
         void validateForChangeState_만료된_결제() {
             Payment payment = Payment.of("testSeller", 100L,
-                    Instant.now().minus(10, ChronoUnit.MINUTES));
-
+                    Instant.now().minus(11, ChronoUnit.MINUTES));
 
             assertThrows(PaymentStateException.class, () -> validator.validateForChangeState(payment)
                     , "만료된 결제입니다.");

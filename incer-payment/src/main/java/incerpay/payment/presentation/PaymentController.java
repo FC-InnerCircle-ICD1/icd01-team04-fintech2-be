@@ -13,9 +13,9 @@ public class PaymentController {
 
     private final PaymentService service;
 
-    @PostMapping("/request")
-    public Response request(@RequestBody PaymentRequestCommand command) {
-        PaymentView view = service.request(command);
+    @PostMapping("/quote")
+    public Response quote(@RequestBody PaymentQuoteCommand command) {
+        PaymentView view = service.quote(command);
         return Response.ok(view);
     }
 

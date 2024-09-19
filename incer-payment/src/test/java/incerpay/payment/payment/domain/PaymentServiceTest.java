@@ -22,13 +22,13 @@ public class PaymentServiceTest {
     class RequestTest{
         @Test
         public void request_성공() {
-            PaymentRequestCommand command = new PaymentRequestCommand(
+            PaymentQuoteCommand command = new PaymentQuoteCommand(
                     "testRequestSellerId",
                     100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
-            PaymentView actualView = service.request(command);
+            PaymentView actualView = service.quote(command);
 
             System.out.println(actualView);
             assertNotNull(actualView);
@@ -43,14 +43,14 @@ public class PaymentServiceTest {
         @Test
         public void approve_성공() {
             // Initiate a payment
-            PaymentRequestCommand command = new PaymentRequestCommand(
+            PaymentQuoteCommand command = new PaymentQuoteCommand(
                     "testApproveSellerId",
                     100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
             // Quote a payment
-            PaymentView createdPayment = service.request(command);
+            PaymentView createdPayment = service.quote(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
 
@@ -70,14 +70,14 @@ public class PaymentServiceTest {
         @Test
         public void cancel_성공() {
             // Initiate a payment
-            PaymentRequestCommand command = new PaymentRequestCommand(
+            PaymentQuoteCommand command = new PaymentQuoteCommand(
                     "testCancelSellerId",
                     100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
             // Quote a payment
-            PaymentView createdPayment = service.request(command);
+            PaymentView createdPayment = service.quote(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
             PaymentApproveCommand approveCommand = new PaymentApproveCommand(createdPayment.paymentId());
@@ -100,14 +100,14 @@ public class PaymentServiceTest {
         @Test
         public void reject_성공() {
             // Initiate a payment
-            PaymentRequestCommand command = new PaymentRequestCommand(
+            PaymentQuoteCommand command = new PaymentQuoteCommand(
                     "testRejectSellerId",
                     100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
             // Request a payment
-            PaymentView createdPayment = service.request(command);
+            PaymentView createdPayment = service.quote(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
 
@@ -127,13 +127,13 @@ public class PaymentServiceTest {
         @Test
         public void readBySellerId_성공() {
             // Initialize a payment
-            PaymentRequestCommand command = new PaymentRequestCommand(
+            PaymentQuoteCommand command = new PaymentQuoteCommand(
                     "testSellerId",
                     100L,
                     LocalDateTime.now().plusSeconds(30)
             );
 
-            PaymentView createdPayment = service.request(command);
+            PaymentView createdPayment = service.quote(command);
             assertNotNull(createdPayment);
             assertEquals(PaymentState.PENDING, createdPayment.state());
 
