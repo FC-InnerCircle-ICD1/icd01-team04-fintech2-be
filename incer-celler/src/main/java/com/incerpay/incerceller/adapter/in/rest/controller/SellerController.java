@@ -19,13 +19,13 @@ public class SellerController implements SellerControllerDocs {
 
 	@Override
 	@GetMapping("/{sellerId}")
-	public ResponseEntity<?> getSeller(@RequestParam(name = "sellerId") Long sellerId) {
+	public ResponseEntity<?> getSeller(@RequestParam Long sellerId) {
 		return ResponseEntity.ok(getSellerUseCase.getSeller(sellerId));
 	}
 
 	@Override
 	@GetMapping
-	public ResponseEntity<?> assignSeller(@RequestParam(name = "sellerId") Long sellerId, @RequestParam(name = "sellerName") String sellerName) {
+	public ResponseEntity<?> assignSeller(@RequestParam Long sellerId, @RequestParam String sellerName) {
 		assignSellerUseCase.assignSeller(sellerId, sellerName);
 		return ResponseEntity.ok("등록 성공");
 	}
@@ -33,7 +33,7 @@ public class SellerController implements SellerControllerDocs {
 	@Override
 	@PostMapping("/card")
 	// todo : String으로 받고 enum 변환하는게 날듯?
-	public ResponseEntity<?> assignCard(@Valid CardRegisterRequest cardRegisterRequest) {
+	public ResponseEntity<?> assignCard(@RequestBody CardRegisterRequest cardRegisterRequest) {
 		return ResponseEntity.ok("등록 성공");
 	}
 

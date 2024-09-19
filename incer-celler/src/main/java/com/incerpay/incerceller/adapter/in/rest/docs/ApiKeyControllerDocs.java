@@ -15,12 +15,12 @@ public interface ApiKeyControllerDocs {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "검증성공"),
 			@ApiResponse(responseCode = "500", description = "검증실패")})
-	ResponseEntity<?> confirmApiKey(@RequestParam Long sellerId, @RequestParam ApiKeyInfo apiKeyInfo);
+	ResponseEntity<?> confirmApiKey(Long sellerId, ApiKeyInfo apiKeyInfo);
 
 	@Operation(summary = "API 키 생성", description = "테스트, 라이브 키를 생성합니다.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "생성성공"),
 			@ApiResponse(responseCode = "500", description = "생성실패")})
-	ResponseEntity<?> assignApiKey(@Schema(description = "상점ID와 key정보") @RequestBody AssignApiKeyRequest assignApiKeyRequest);
+	ResponseEntity<?> assignApiKey(AssignApiKeyRequest assignApiKeyRequest);
 
 }
