@@ -66,4 +66,14 @@ public class PaymentService {
     public PaymentDetailView readDetailBySellerId(String sellerId, String paymentId) {
         return viewer.readDetailBySellerId(sellerId, paymentId);
     }
+
+    @Transactional
+    public PaymentView confirm(PaymentConfirmCommand command) {
+        Payment payment = repository.findById(command.paymentId())
+                .orElseThrow(()-> new PersistentNotFoundException("Payment Not Found"));
+        validator.validateForConfirm(payment);
+        payment.confirm(clockManager.getClock());
+        repository.save(payment);
+        return viewer.readPayment(payment.id());
+    }
 }

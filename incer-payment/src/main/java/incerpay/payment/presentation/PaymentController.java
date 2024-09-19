@@ -25,6 +25,12 @@ public class PaymentController {
         return Response.ok(view);
     }
 
+    @PostMapping("/confirm")
+    public Response confirm(@RequestBody PaymentConfirmCommand command) {
+        PaymentView view = service.confirm(command);
+        return Response.ok(view);
+    }
+
     @PostMapping("/cancel")
     public Response cancel(@RequestBody PaymentCancelCommand command) {
         PaymentView view = service.cancel(command);

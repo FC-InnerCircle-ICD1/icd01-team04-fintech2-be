@@ -52,6 +52,48 @@ public class PaymentTest {
     }
 
     @Nested
+    class ConfirmTest {
+
+        @Test
+        public void confirm_FromPending_성공() {
+            // Arrange
+            String sellerId = "testSeller";
+            Long amount = 100L;
+            Instant createdAt = Instant.now();
+            // Create payment
+            Payment payment = Payment.of(sellerId, amount, createdAt);
+            Clock fixedClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+
+            // Act - Confirm
+            payment.confirm(fixedClock);
+
+            // Assert
+            assertEquals(PaymentState.CONFIRMED, payment.paymentProperty().state());
+            assertEquals(1, payment.paymentLedgers().size());
+        }
+
+        @Test
+        public void confirm_FromApproved_성공() {
+            // Arrange
+            String userLogin = "testSeller";
+            Long boughtProductPrice = 100L;
+            Instant buyingTime = Instant.now();
+            // Create payment
+            Payment payment = Payment.of(userLogin, boughtProductPrice, buyingTime);
+            Clock controlledClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+            // Approve payment
+            payment.approve(controlledClock);
+
+            // Act - Confirm
+            payment.confirm(controlledClock);
+
+            // Assert
+            assertEquals(PaymentState.CONFIRMED, payment.paymentProperty().state());
+            assertEquals(2, payment.paymentLedgers().size());
+        }
+    }
+
+    @Nested
     class CancelTest {
         @Test
         public void cancel_FromPending_성공() {
@@ -90,6 +132,28 @@ public class PaymentTest {
             assertEquals(PaymentState.CANCELED, payment.paymentProperty().state());
             assertEquals(2, payment.paymentLedgers().size());
         }
+
+        @Test
+        public void cancel_FromConfirmed_성공() {
+            // Arrange
+            String sellerId = "testSeller";
+            Long amount = 100L;
+            Instant createdAt = Instant.now();
+            // 생성
+            Payment payment = Payment.of(sellerId, amount, createdAt);
+            Clock fixedClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+            // 승인
+            payment.approve(fixedClock);
+            // 확인
+            payment.confirm(fixedClock);
+
+            // Act - 취소
+            payment.cancel(fixedClock);
+
+            // Assert
+            assertEquals(PaymentState.CANCELED, payment.paymentProperty().state());
+            assertEquals(3, payment.paymentLedgers().size());
+        }
     }
 
     @Nested
@@ -113,7 +177,7 @@ public class PaymentTest {
         }
 
         @Test
-        public void reconcile_FromApproved_성공() {
+        public void reject_FromApproved_성공() {
             // Arrange
             String userLogin = "testSeller";
             Long boughtProductPrice = 100L;
@@ -121,15 +185,62 @@ public class PaymentTest {
             // Create payment
             Payment payment = Payment.of(userLogin, boughtProductPrice, buyingTime);
             Clock controlledClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
-              // Approve payment
+          // Approve payment
             payment.approve(controlledClock);
 
             // Act - Reconcile
-            payment.settle(controlledClock);
+            payment.reject(controlledClock);
+
+            // Assert
+            assertEquals(PaymentState.REJECTED, payment.paymentProperty().state());
+            assertEquals(2, payment.paymentLedgers().size());
+        }
+
+        @Test
+        public void reject_FromConfirmed_성공() {
+            // Arrange
+            String sellerId = "testSeller";
+            Long amount = 100L;
+            Instant createdAt = Instant.now();
+            // 생성
+            Payment payment = Payment.of(sellerId, amount, createdAt);
+            Clock fixedClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+            // 승인
+            payment.approve(fixedClock);
+            // 확인
+            payment.confirm(fixedClock);
+
+            // Act - 거절
+            payment.reject(fixedClock);
+
+            // Assert
+            assertEquals(PaymentState.REJECTED, payment.paymentProperty().state());
+            assertEquals(3, payment.paymentLedgers().size());
+        }
+    }
+
+    @Nested
+    class SettleTest {
+        @Test
+        public void settle_FromConfirmed_성공() {
+            // Arrange
+            String sellerId = "testSeller";
+            Long amount = 100L;
+            Instant createdAt = Instant.now();
+            // 생성
+            Payment payment = Payment.of(sellerId, amount, createdAt);
+            Clock fixedClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+            // 승인
+            payment.approve(fixedClock);
+            // 확인
+            payment.confirm(fixedClock);
+
+            // Act - 정산
+            payment.settle(fixedClock);
 
             // Assert
             assertEquals(PaymentState.SETTLED, payment.paymentProperty().state());
-            assertEquals(2, payment.paymentLedgers().size());
+            assertEquals(3, payment.paymentLedgers().size());
         }
     }
 }
