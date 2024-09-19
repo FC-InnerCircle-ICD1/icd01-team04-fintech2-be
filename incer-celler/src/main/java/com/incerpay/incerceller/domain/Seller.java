@@ -11,6 +11,8 @@ public class Seller {
 	private Long sellerId;
 	private String sellerName;
 	private List<ApiKeyInfo> apiKeyInfos;
+	private List<PaymentMethod> paymentMethods;
+	private List<CardCompany> cardCompanies;
 
 	public boolean hasApiKeyInfo(ApiKeyInfo targetApiKey) {
 		return this.apiKeyInfos.stream()

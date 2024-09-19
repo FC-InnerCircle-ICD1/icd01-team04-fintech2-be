@@ -1,12 +1,10 @@
 package com.incerpay.incerceller.application.service;
 
 import com.incerpay.incerceller.application.dto.AssignApiKeyRequest;
-import com.incerpay.incerceller.application.dto.ConfirmApiKeyRequest;
 import com.incerpay.incerceller.application.port.in.AssignApiKeyUseCase;
 import com.incerpay.incerceller.application.port.in.GetSellerUseCase;
 import com.incerpay.incerceller.application.port.in.VerifyApiKeyUseCase;
 import com.incerpay.incerceller.application.port.out.SaveApiKeyPort;
-import com.incerpay.incerceller.application.port.out.SelectApiKeyPort;
 import com.incerpay.incerceller.application.port.out.UpdateSellerPort;
 import com.incerpay.incerceller.domain.ApiKeyInfo;
 import com.incerpay.incerceller.domain.Seller;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApiKeyService implements AssignApiKeyUseCase, VerifyApiKeyUseCase {
 
 	private final SaveApiKeyPort saveApiKeyPort;
-	private final SelectApiKeyPort selectApiKeyPort;
 	private final UpdateSellerPort updateSellerPort;
 	private final GetSellerUseCase getSellerUseCase;
 
@@ -44,9 +41,9 @@ public class ApiKeyService implements AssignApiKeyUseCase, VerifyApiKeyUseCase {
 	}
 
 	@Override
-	public boolean vertifyApiKey(ConfirmApiKeyRequest confirmApiKeyRequest) {
-		Seller seller = getSellerUseCase.getSeller(confirmApiKeyRequest.sellerId());
-		return seller.hasApiKeyInfo(confirmApiKeyRequest.apiKeyInfo());
+	public boolean vertifyApiKey(Long sellerId, ApiKeyInfo apiKeyInfo) {
+		Seller seller = getSellerUseCase.getSeller(sellerId);
+		return seller.hasApiKeyInfo(apiKeyInfo);
 		// 포트의 기능은 단순 데이터 가져오는 역할만 하는가? 검증하는 기능은 어디들어가야할까?
 	}
 

@@ -23,6 +23,8 @@ public class SellerMapper {
 		return SellerEntity.builder()
 				.sellerId(seller.getSellerId())
 				.sellerName(seller.getSellerName())
+				.paymentMethods(seller.getPaymentMethods())
+				.cardCompanies(seller.getCardCompanies())
 				.build();
 	}
 

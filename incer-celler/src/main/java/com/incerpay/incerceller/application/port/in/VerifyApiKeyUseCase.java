@@ -1,9 +1,8 @@
 package com.incerpay.incerceller.application.port.in;
 
-import com.incerpay.incerceller.application.dto.ConfirmApiKeyRequest;
-import org.springframework.http.ResponseEntity;
+import com.incerpay.incerceller.domain.ApiKeyInfo;
 
 public interface VerifyApiKeyUseCase {
-    boolean vertifyApiKey(ConfirmApiKeyRequest confirmApiKeyRequest);
+    boolean vertifyApiKey(Long sellerId, ApiKeyInfo apiKeyInfo);
 
 }
