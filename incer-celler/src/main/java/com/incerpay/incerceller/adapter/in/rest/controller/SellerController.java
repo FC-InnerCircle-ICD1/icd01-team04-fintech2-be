@@ -32,8 +32,7 @@ public class SellerController implements SellerControllerDocs {
 
 	@Override
 	@PostMapping("/card")
-	// todo : String으로 받고 enum 변환하는게 날듯?
-	public ResponseEntity<?> assignCard(@RequestBody CardRegisterRequest cardRegisterRequest) {
+	public ResponseEntity<?> assignCard(@RequestBody @Valid CardRegisterRequest cardRegisterRequest) {
 		return ResponseEntity.ok("등록 성공");
 	}
 

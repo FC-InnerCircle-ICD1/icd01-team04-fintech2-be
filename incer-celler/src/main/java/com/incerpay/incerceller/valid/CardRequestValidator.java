@@ -27,7 +27,7 @@ public class CardRequestValidator implements ConstraintValidator<ValidCardReques
 
         // 특정 값이 포함된 경우에만 cardCompany 허용 (예: CREDIT_CARD)
         if (!paymentMethods.contains(PaymentMethod.CREDIT_CARD)) {
-            return !cardCompanies.isEmpty();  // cardCompany도 없어야 함
+            return cardCompanies.isEmpty();  // cardCompany도 없어야 함
         }
 
         return true;
