@@ -10,8 +10,8 @@ public class AuthorizationSecretKeyVerifier {
         this.storeServiceCaller = storeServiceCaller;
     }
 
-    public boolean verify(String apiKey) {
-        storeServiceCaller.verifySecretKey(apiKey);
+    public boolean verify(String apiKey, Long sellerId) {
+        storeServiceCaller.verifySecretKey(apiKey, sellerId);
         return true;
     }
 

@@ -11,8 +11,8 @@ public class AuthorizationPublicKeyVerifier {
         this.storeServiceCaller = storeServiceCaller;
     }
 
-    public boolean verify(String apiKey) {
-        storeServiceCaller.verifyPublicKey(apiKey);
+    public boolean verify(String apiKey, Long sellerId) {
+        storeServiceCaller.verifyPublicKey(apiKey, sellerId);
         return true;
     }
 }
