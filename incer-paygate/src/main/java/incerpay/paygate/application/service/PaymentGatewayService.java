@@ -2,6 +2,7 @@ package incerpay.paygate.application.service;
 
 import incerpay.paygate.application.factory.PaymentApiAdapterFactory;
 import incerpay.paygate.domain.component.*;
+import incerpay.paygate.domain.enumeration.PaymentType;
 import incerpay.paygate.domain.vo.PaymentIdentification;
 import incerpay.paygate.domain.vo.SellerIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
@@ -24,8 +25,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView request(PaymentRequestCommand command) {
         validator.validate(command);
-        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
-        ApiAdapterView apiView = adapter.request(command);
+        ApiAdapterView apiView = getMatchedPayment(command.type()).request(command);
         PersistenceView pv = persistenceAdapter.request(command);
         return viewer.read(pv);
     }
@@ -33,8 +33,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView confirm(PaymentApproveCommand command) {
         validator.validate(command);
-        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
-        ApiAdapterView apiView = adapter.confirm(command);
+        ApiAdapterView apiView = getMatchedPayment(command.type()).confirm(command);
         PersistenceView pv = persistenceAdapter.approve(command);
         return viewer.read(pv);
     }
@@ -42,8 +41,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView cancel(PaymentCancelCommand command) {
         validator.validate(command);
-        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
-        ApiAdapterView apiView = adapter.cancel(command);
+        ApiAdapterView apiView = getMatchedPayment(command.type()).cancel(command);
         PersistenceView pv = persistenceAdapter.cancel(command);
         return viewer.read(pv);
     }
@@ -51,8 +49,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView reject(PaymentRejectCommand command) {
         validator.validate(command);
-        PaymentApiAdapter adapter = paymentApiAdapterFactory.getAdapter(command.type());
-        ApiAdapterView apiView = adapter.reject(command);
+        ApiAdapterView apiView = getMatchedPayment(command.type()).reject(command);
         PersistenceView pv = persistenceAdapter.reject(command);
         return viewer.read(pv);
     }
@@ -82,4 +79,8 @@ public class PaymentGatewayService {
         return viewer.read(pv);
     }
 
+
+    private PaymentApiAdapter getMatchedPayment(PaymentType paymentType) {
+        return paymentApiAdapterFactory.getAdapter(paymentType);
+    }
 }
