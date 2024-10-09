@@ -55,4 +55,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidApiKeyException.class)
+    public ResponseEntity<String> handleInvalidApiKeyException(InvalidApiKeyException ex) {
+        String errorMessage = ex.getMessage() != null ? ex.getMessage() : "Bad request";
+        log.error(errorMessage, ex);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
 }

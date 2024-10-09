@@ -1,5 +1,6 @@
 package incerpay.paygate.common.auth;
 
+import incerpay.paygate.common.exception.InvalidApiKeyException;
 import incerpay.paygate.infrastructure.internal.IncerPaymentStoreCaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ public class AuthorizationPublicKeyVerifier {
 
     private static final int KEY_LENGTH = 9;
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final String INVALID_API_KEY_MESSAGE = "Non Api Key Accepted";
 
     private final IncerPaymentStoreCaller incerPaymentStoreCaller;
     public AuthorizationPublicKeyVerifier(IncerPaymentStoreCaller incerPaymentStoreCaller) {
@@ -29,14 +29,14 @@ public class AuthorizationPublicKeyVerifier {
     private boolean validateKey(String apiKey){
 
         if (apiKey == null || !apiKey.startsWith(BEARER_PREFIX)) {
-            throw new RuntimeException(INVALID_API_KEY_MESSAGE);
+            throw new InvalidApiKeyException();
         }
 
         String keyPart = apiKey.substring(BEARER_PREFIX.length());
         log.info("AuthorizationPublicKeyVerifier apiKey: {}, Parsed key length: {}", apiKey, keyPart);
 
         if (keyPart.length() != KEY_LENGTH) {
-            throw new RuntimeException(INVALID_API_KEY_MESSAGE);
+            throw new InvalidApiKeyException();
         }
 
         return true;

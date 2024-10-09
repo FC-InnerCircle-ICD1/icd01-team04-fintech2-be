@@ -1,5 +1,6 @@
 package incerpay.paygate.infrastructure.internal;
 
+import incerpay.paygate.common.exception.InvalidApiKeyException;
 import incerpay.paygate.infrastructure.internal.dto.IncerPayStoreApiCertifyKeyView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Component;
 public class IncerPaymentStoreCaller {
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final String INVALID_API_KEY_MESSAGE = "Non Api Key Accepted";
     private final IncerPaymentStoreApi api;
     public IncerPaymentStoreCaller(IncerPaymentStoreApi api) {
         this.api = api;
@@ -54,7 +54,7 @@ public class IncerPaymentStoreCaller {
                 return true;
         }
 
-        throw new RuntimeException(INVALID_API_KEY_MESSAGE);
+        throw new InvalidApiKeyException();
 
     }
 
