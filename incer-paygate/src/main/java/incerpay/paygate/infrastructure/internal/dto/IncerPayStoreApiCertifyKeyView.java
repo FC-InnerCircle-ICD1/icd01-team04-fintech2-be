@@ -1,7 +1,7 @@
 package incerpay.paygate.infrastructure.internal.dto;
 
 
-public record StoreServiceApiCertifyKeyView(
+public record IncerPayStoreApiCertifyKeyView(
         String apiKey,
         String apiKeyState
 ) {}

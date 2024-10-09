@@ -90,11 +90,11 @@ public class CardApiAdapter implements PaymentApiAdapter {
 
         if(paymentView.data() instanceof IncerPaymentSuccessData data) {
             return new ApiSuccessAdapterView(
-                data.paymentId(),
-                UUID.randomUUID(),
-                data.sellerId(),
-                data.state(),
-                data.price()
+                    data.paymentId(),
+                    UUID.randomUUID(),
+                    data.sellerId(),
+                    data.state(),
+                    data.price()
             );
         }
 

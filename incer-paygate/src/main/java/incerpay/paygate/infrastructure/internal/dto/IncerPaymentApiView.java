@@ -1,4 +1,4 @@
-package incerpay.paygate.infrastructure.external.dto;
+package incerpay.paygate.infrastructure.internal.dto;
 
 public record IncerPaymentApiView(
         int resultCode,

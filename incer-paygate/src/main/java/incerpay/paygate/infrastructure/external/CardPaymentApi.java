@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Component
-@FeignClient(name = "CardPaymentApi", url = "http://localhost:8081")
+@FeignClient(name = "CardPaymentApi", url = "${api.external.card.url}")
 public interface CardPaymentApi {
 
     @PostMapping("api/card/certify")

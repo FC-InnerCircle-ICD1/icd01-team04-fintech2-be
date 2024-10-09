@@ -1,6 +1,6 @@
 package incerpay.paygate.common.auth;
 
-import incerpay.paygate.infrastructure.internal.StoreServiceCaller;
+import incerpay.paygate.infrastructure.internal.IncerPaymentStoreCaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,14 +15,14 @@ public class AuthorizationPublicKeyVerifier {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String INVALID_API_KEY_MESSAGE = "Non Api Key Accepted";
 
-    private final StoreServiceCaller storeServiceCaller;
-    public AuthorizationPublicKeyVerifier(StoreServiceCaller storeServiceCaller) {
-        this.storeServiceCaller = storeServiceCaller;
+    private final IncerPaymentStoreCaller incerPaymentStoreCaller;
+    public AuthorizationPublicKeyVerifier(IncerPaymentStoreCaller incerPaymentStoreCaller) {
+        this.incerPaymentStoreCaller = incerPaymentStoreCaller;
     }
 
     public boolean verify(String apiKey, Long sellerId) {
         validateKey(apiKey);
-        storeServiceCaller.verifyPublicKey(apiKey, sellerId);
+        incerPaymentStoreCaller.verifyPublicKey(apiKey, sellerId);
         return true;
     }
 

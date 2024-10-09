@@ -1,21 +1,21 @@
 package incerpay.paygate.infrastructure.internal;
 
-import incerpay.paygate.infrastructure.internal.dto.StoreServiceApiCertifyKeyView;
+import incerpay.paygate.infrastructure.internal.dto.IncerPayStoreApiCertifyKeyView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StoreServiceCaller {
+public class IncerPaymentStoreCaller {
 
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String INVALID_API_KEY_MESSAGE = "Non Api Key Accepted";
-    private final StoreServiceApi api;
-    public StoreServiceCaller(StoreServiceApi api) {
+    private final IncerPaymentStoreApi api;
+    public IncerPaymentStoreCaller(IncerPaymentStoreApi api) {
         this.api = api;
     }
-    private static final Logger log = LoggerFactory.getLogger(StoreServiceCaller.class);
+    private static final Logger log = LoggerFactory.getLogger(IncerPaymentStoreCaller.class);
 
     public boolean verifyPublicKey(String apiKey, Long sellerId) {
 
@@ -46,7 +46,7 @@ public class StoreServiceCaller {
 
     private boolean verifyApiKey(ResponseEntity<?> rawResponse) {
 
-        if (rawResponse.getBody() instanceof StoreServiceApiCertifyKeyView view
+        if (rawResponse.getBody() instanceof IncerPayStoreApiCertifyKeyView view
             && rawResponse.getStatusCode().is2xxSuccessful()) {
                 String apiKeyState = view.apiKeyState();
                 String apiKey = view.apiKey();
