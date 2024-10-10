@@ -25,7 +25,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView request(PaymentRequestCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = getMatchedPayment(command.type()).request(command);
+        ApiAdapterView apiView = getMatchedPaymentApi(command.type()).request(command);
         PersistenceView pv = persistenceAdapter.request(command);
         return viewer.read(pv);
     }
@@ -33,7 +33,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView confirm(PaymentApproveCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = getMatchedPayment(command.type()).confirm(command);
+        ApiAdapterView apiView = getMatchedPaymentApi(command.type()).confirm(command);
         PersistenceView pv = persistenceAdapter.approve(command);
         return viewer.read(pv);
     }
@@ -41,7 +41,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView cancel(PaymentCancelCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = getMatchedPayment(command.type()).cancel(command);
+        ApiAdapterView apiView = getMatchedPaymentApi(command.type()).cancel(command);
         PersistenceView pv = persistenceAdapter.cancel(command);
         return viewer.read(pv);
     }
@@ -49,7 +49,7 @@ public class PaymentGatewayService {
     @Transactional
     public PaymentStateView reject(PaymentRejectCommand command) {
         validator.validate(command);
-        ApiAdapterView apiView = getMatchedPayment(command.type()).reject(command);
+        ApiAdapterView apiView = getMatchedPaymentApi(command.type()).reject(command);
         PersistenceView pv = persistenceAdapter.reject(command);
         return viewer.read(pv);
     }
@@ -80,7 +80,7 @@ public class PaymentGatewayService {
     }
 
 
-    private PaymentApiAdapter getMatchedPayment(PaymentType paymentType) {
+    private PaymentApiAdapter getMatchedPaymentApi(PaymentType paymentType) {
         return paymentApiAdapterFactory.getAdapter(paymentType);
     }
 }
