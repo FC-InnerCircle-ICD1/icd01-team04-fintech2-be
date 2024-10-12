@@ -5,6 +5,7 @@ import com.incerpay.incerceller.application.dto.AssignApiKeyRequest;
 import com.incerpay.incerceller.application.port.in.AssignApiKeyUseCase;
 import com.incerpay.incerceller.application.port.in.VerifyApiKeyUseCase;
 import com.incerpay.incerceller.domain.ApiKeyInfo;
+import com.incerpay.incerceller.domain.ApiKeyState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,10 @@ public class ApiKeyController implements ApiKeyControllerDocs {
 
 	@Override
 	@GetMapping
-	public ResponseEntity<?> confirmApiKey(@RequestParam Long sellerId, @RequestParam ApiKeyInfo apiKeyInfo) {
-		return ResponseEntity.ok(verifyApiKeyUseCase.vertifyApiKey(sellerId,apiKeyInfo));
+	public ResponseEntity<?> confirmApiKey(@RequestParam Long sellerId, @RequestParam String apiKey, @RequestParam ApiKeyState apiKeyState) {
+		return ResponseEntity.ok(verifyApiKeyUseCase.vertifyApiKey(sellerId, new ApiKeyInfo(apiKey, apiKeyState)));
 	}
+
 	@Override
 	@PostMapping
 	public ResponseEntity<?> assignApiKey(@RequestBody AssignApiKeyRequest assignApiKeyRequest) {
