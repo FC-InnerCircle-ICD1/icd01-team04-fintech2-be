@@ -1,45 +1,54 @@
-### 가맹점 조회
-GET http://43.202.59.167:8083/seller/12345
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
-### 가맹점 카드 등록
-POST http://43.202.59.167:8083/seller/card
+### 결제 요청
+POST http://43.202.59.167:8082/payment/quote
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 {
-  "sellerId": 12345,
-  "paymentMethod": ["CREDIT_CARD", "NAVER"],
-  "cardCompany": ["NH", "KB"]
+  "sellerId": "12345",
+  "amount": 10000,
+  "expiredAt": "2024-12-31T23:59:59"
 }
 
-### 가맹점 카드 리스트 확인
-GET http://43.202.59.167:8083/seller/12345/cards
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
-### 이용 카드 리스트 수정
-PUT http://43.202.59.167:8083/seller/12345/cards
+### 결제 승인
+POST http://43.202.59.167:8082/payment/approve
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 {
-  "cardCompanyCode": ["030", "050"]
+  "paymentId": "cd79a03d-ade8-4384-bae8-b09fee1dd830"
 }
 
-### 키 검증
-GET http://43.202.59.167:8083/apikey
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
-### 키 발급
-POST http://43.202.59.167:8083/apikey
+### 결제 확정
+POST http://43.202.59.167:8082/payment/confirm
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 {
-  "sellerId": 12345,
-  "apiKeyState": "TEST"
+  "paymentId": "cd79a03d-ade8-4384-bae8-b09fee1dd830"
 }
 
-### 테스트 키 / 라이브 키 조회
-GET http://43.202.59.167:8083/apikey
+### 결제 취소
+POST http://43.202.59.167:8082/payment/cancel
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+{
+  "paymentId": "cd79a03d-ade8-4384-bae8-b09fee1dd830"
+}
+
+### 결제 거절
+POST http://43.202.59.167:8082/payment/reject
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+{
+  "paymentId": "cd79a03d-ade8-4384-bae8-b09fee1dd830"
+}
+
+### 결제 목록 조회
+GET http://43.202.59.167:8082/payment/seller/12345/list
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+### 결제 상세 정보 조회
+GET http://43.202.59.167:8082/payment/seller/12345/detail/67890
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
