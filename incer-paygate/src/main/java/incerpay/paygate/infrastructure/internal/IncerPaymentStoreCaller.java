@@ -1,7 +1,8 @@
 package incerpay.paygate.infrastructure.internal;
 
 import incerpay.paygate.common.exception.InvalidApiKeyException;
-import incerpay.paygate.infrastructure.internal.dto.IncerPayStoreApiCertifyKeyView;
+import incerpay.paygate.domain.enumeration.ApiKeyState;
+import incerpay.paygate.infrastructure.internal.dto.ApiKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -17,40 +18,31 @@ public class IncerPaymentStoreCaller {
     }
     private static final Logger log = LoggerFactory.getLogger(IncerPaymentStoreCaller.class);
 
-    public boolean verifyPublicKey(String apiKey, Long sellerId) {
+    public boolean verifyPublicKey(Long sellerId, String apiKey, ApiKeyState apiKeyState) {
 
-        ResponseEntity<?> view = api.getApiKeyInfo(apiKey, sellerId);
-        verifyApiKey(view);
-
-        if (!apiKey.equals(BEARER_PREFIX + "PublicKey")) {
-            log.info("Accepted apiKey: {}", apiKey);
-            return false;
-        }
+        apiKey = apiKey.substring(BEARER_PREFIX.length());
+        ResponseEntity<?> view = api.getApiKeyInfo(sellerId, apiKey, apiKeyState);
+        verifyApiKey(view, new ApiKeyInfo(apiKey, apiKeyState));
 
         return true;
     }
 
-    public boolean verifySecretKey(String apiKey, Long sellerId){
+    public boolean verifySecretKey(Long sellerId, String apiKey, ApiKeyState apiKeyState){
 
-        ResponseEntity<?> view = api.getApiKeyInfo(apiKey, sellerId);
-        verifyApiKey(view);
+        ResponseEntity<?> view = api.getApiKeyInfo(sellerId, apiKey, apiKeyState);
+        verifyApiKey(view, new ApiKeyInfo(apiKey, apiKeyState));
 
-        if (!apiKey.equals(BEARER_PREFIX + "SecretKey")) {
-            log.info("Accepted apiKey: {}", apiKey);
-            return false;
-        }
 
         return true;
     }
 
 
-    private boolean verifyApiKey(ResponseEntity<?> rawResponse) {
+    private boolean verifyApiKey(ResponseEntity<?> rawResponse, ApiKeyInfo apiKeyInfo) {
 
-        if (rawResponse.getBody() instanceof IncerPayStoreApiCertifyKeyView view
-            && rawResponse.getStatusCode().is2xxSuccessful()) {
-                String apiKeyState = view.apiKeyState();
-                String apiKey = view.apiKey();
-                log.info("API Key State: {}, API Key: {}", apiKeyState, apiKey);
+        if (rawResponse.getBody() instanceof Boolean isValidKey
+            && rawResponse.getStatusCode().is2xxSuccessful()
+            && isValidKey) {
+                log.info("API Key State: {}, API Key: {}", apiKeyInfo.getApiKeyState(), apiKeyInfo.getApiKey());
                 return true;
         }
 

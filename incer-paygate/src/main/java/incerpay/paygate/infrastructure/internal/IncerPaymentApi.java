@@ -1,8 +1,8 @@
-package incerpay.paygate.infrastructure.external;
+package incerpay.paygate.infrastructure.internal;
 
 import incerpay.paygate.common.config.FeignConfig;
-import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiListView;
-import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiView;
+import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiListView;
+import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Component
-@FeignClient(name = "IncerPaymentApi", url = "http://localhost:8082", configuration = FeignConfig.class)
+@FeignClient(name = "IncerPaymentApi", url = "${api.payment.url}", configuration = FeignConfig.class)
 public interface IncerPaymentApi {
 
     @PostMapping("/payment/quote")

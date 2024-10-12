@@ -1,5 +1,6 @@
 package incerpay.paygate.common.auth;
 import incerpay.paygate.infrastructure.internal.IncerPaymentStoreCaller;
+import incerpay.paygate.infrastructure.internal.dto.ApiKeyInfo;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,8 +11,9 @@ public class AuthorizationSecretKeyVerifier {
         this.incerPaymentStoreCaller = incerPaymentStoreCaller;
     }
 
-    public boolean verify(String apiKey, Long sellerId) {
-        incerPaymentStoreCaller.verifySecretKey(apiKey, sellerId);
+    public boolean verify(Long sellerId, String apiKey, String apiKeyState) {
+        ApiKeyInfo apiKeyInfo = new ApiKeyInfo(apiKey, apiKeyState);
+        incerPaymentStoreCaller.verifySecretKey(sellerId, apiKey, apiKeyInfo.getApiKeyState());
         return true;
     }
 

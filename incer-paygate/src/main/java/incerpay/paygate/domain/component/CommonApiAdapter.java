@@ -3,11 +3,15 @@ package incerpay.paygate.domain.component;
 import incerpay.paygate.domain.vo.PaymentIdentification;
 import incerpay.paygate.domain.vo.SellerIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
-import incerpay.paygate.infrastructure.external.IncerPaymentApi;
-import incerpay.paygate.infrastructure.external.dto.*;
+import incerpay.paygate.infrastructure.external.dto.IncerPaymentSuccessData;
+import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
+import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiListView;
+import incerpay.paygate.presentation.dto.out.PersistenceSuccessView;
 import incerpay.paygate.presentation.dto.out.PersistenceView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -27,7 +31,7 @@ public class CommonApiAdapter {
         IncerPaymentApiListView paymentView = api.readBySellerId(id.sellerId());
         log.info("readStatusBySellerId.paymentView: " + paymentView.toString());
 
-        return paymentViewtoPersistenceView(paymentView);
+        return paymentViewToPersistenceView(paymentView);
     }
 
     public PersistenceView readStatusByPaymentId(PaymentIdentification id) {
@@ -35,7 +39,7 @@ public class CommonApiAdapter {
         IncerPaymentApiListView paymentView = api.readByPaymentId(id.sellerId(), id.paymentId());
         log.info("readStatusByPaymentId.paymentView: " + paymentView.toString());
 
-        return paymentViewtoPersistenceView(paymentView);
+        return paymentViewToPersistenceView(paymentView);
     }
 
     public PersistenceView readStatusByTransactionId(TransactionIdentification id) {
@@ -44,24 +48,22 @@ public class CommonApiAdapter {
 
         log.info("readStatusByTransactionId.paymentView: " + paymentView.toString());
 
-        return paymentViewtoPersistenceView(paymentView);
+        return paymentViewToPersistenceView(paymentView);
     }
 
-    private PersistenceView paymentViewtoPersistenceView(IncerPaymentApiListView view) {
+    private PersistenceView paymentViewToPersistenceView(IncerPaymentApiListView view) {
 
-        return new PersistenceView();
+        if(view.payments().size() > 0 && view.payments().get(0) instanceof IncerPaymentSuccessData data) {
+            return new PersistenceSuccessView(
+                    data.paymentId(),
+                    UUID.randomUUID(),
+                    data.sellerId(),
+                    data.state(),
+                    data.price()
+            );
+        }
 
-//
-//        if(view.payments()  instanceof IncerPaymentSuccessData data) {
-//            return new PersistenceView(
-//                    data.paymentId(),
-//                    UUID.randomUUID(),
-//                    data.sellerId(),
-//                    data.state(),
-//                    data.price()
-//            );
-//        }
-//
-//        throw new RuntimeException();
+        throw new RuntimeException();
+
     }
 }

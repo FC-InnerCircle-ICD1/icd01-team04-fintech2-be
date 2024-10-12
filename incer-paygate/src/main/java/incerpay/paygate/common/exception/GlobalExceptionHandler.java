@@ -1,5 +1,6 @@
 package incerpay.paygate.common.exception;
 
+import feign.FeignException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,5 +62,20 @@ public class GlobalExceptionHandler {
         log.error(errorMessage, ex);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<String> handleFeignException(FeignException ex) {
+        String errorMessage = ex.getMessage() != null ? ex.getMessage() : "Bad request";
+        log.error(errorMessage, ex);
+        return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IncerPaymentStoreApiFeignException.class)
+    public ResponseEntity<String> handleIncerPaymentStoreApiFeignException(IncerPaymentStoreApiFeignException ex) {
+        String errorMessage = ex.getMessage()  != null ? ex.getMessage() : "Bad request";
+        log.error(errorMessage, ex);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

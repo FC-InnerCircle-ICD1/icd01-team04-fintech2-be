@@ -44,8 +44,9 @@ public class AuthorizationKeyAspect {
                 = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         String apiKey = request.getHeader("Authorization");
+        String apiKeyState = request.getHeader("X-Api-Key-State");
 
-        log.info("Authorization apiKey" + apiKey);
+        log.info("Authorization apiKey: {}, apiKeyState: {}" + apiKey + apiKeyState);
 
         Object[] args = joinPoint.getArgs();
         Long sellerId = 0L;
@@ -55,11 +56,11 @@ public class AuthorizationKeyAspect {
             if (arg instanceof PaymentRequestCommand command) {
                 sellerId = Long.parseLong(command.customerId());
             } else if (arg instanceof PaymentApproveCommand command) {
-                sellerId = Long.parseLong(command.customerId());
+                sellerId = Long.parseLong(command.sellerId());
             } else if (arg instanceof PaymentCancelCommand command) {
-                sellerId = Long.parseLong(command.customerId());
+                sellerId = Long.parseLong(command.sellerId());
             } else if (arg instanceof PaymentRejectCommand command) {
-                sellerId = Long.parseLong(command.customerId());
+                sellerId = Long.parseLong(command.sellerId());
             } else {
                 throw new IllegalArgumentException("Need Seller Id");
             }
@@ -67,10 +68,10 @@ public class AuthorizationKeyAspect {
         }
 
         if (method.isAnnotationPresent(AuthorizationPublicKeyHeader.class)) {
-            authorizationPublicKeyVerifier.verify(apiKey, sellerId);
+            authorizationPublicKeyVerifier.verify(sellerId, apiKey, apiKeyState);
         }
         if (method.isAnnotationPresent(AuthorizationSecretKeyHeader.class)) {
-            authorizationSecretKeyVerifier.verify(apiKey, sellerId);
+            authorizationSecretKeyVerifier.verify(sellerId, apiKey, apiKeyState);
         }
 
     }

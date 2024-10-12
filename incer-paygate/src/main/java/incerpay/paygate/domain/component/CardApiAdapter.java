@@ -1,8 +1,9 @@
 package incerpay.paygate.domain.component;
 
 import incerpay.paygate.infrastructure.external.CardPaymentApi;
-import incerpay.paygate.infrastructure.external.IncerPaymentApi;
 import incerpay.paygate.infrastructure.external.dto.*;
+import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
+import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
 import incerpay.paygate.presentation.dto.out.ApiAdapterView;
 import incerpay.paygate.presentation.dto.out.ApiMessageAdapterView;

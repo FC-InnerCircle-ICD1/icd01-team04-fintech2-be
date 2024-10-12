@@ -6,7 +6,7 @@ import incerpay.paygate.presentation.dto.PaymentMethodDetails;
 import java.util.UUID;
 
 public record PaymentApproveCommand(
-        String customerId,
+        String sellerId,
         String customerName,
 
         String orderId,

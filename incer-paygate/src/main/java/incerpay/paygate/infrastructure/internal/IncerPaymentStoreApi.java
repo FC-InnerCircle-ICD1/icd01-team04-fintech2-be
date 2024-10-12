@@ -1,6 +1,6 @@
 package incerpay.paygate.infrastructure.internal;
 
-import incerpay.paygate.infrastructure.internal.dto.IncerPayStoreApiCertifyKeyView;
+import incerpay.paygate.domain.enumeration.ApiKeyState;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 public interface IncerPaymentStoreApi {
 
     @GetMapping("/apikey")
-    ResponseEntity<IncerPayStoreApiCertifyKeyView> getApiKeyInfo(
-            @RequestHeader("authorization") String accessToken,
-            @RequestParam("sellerId") Long sellerId
+    ResponseEntity<Boolean> getApiKeyInfo(
+            @RequestParam("sellerId") Long sellerId,
+            @RequestParam("apiKey") String apiKey,
+            @RequestParam("apiKeyState") ApiKeyState apiKeyState
     );
 
 }
