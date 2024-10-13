@@ -2,12 +2,11 @@ package incerpay.paygate.domain.component;
 
 import incerpay.paygate.infrastructure.external.CardPaymentApi;
 import incerpay.paygate.infrastructure.external.IncerPaymentApi;
-import incerpay.paygate.infrastructure.external.dto.CardApiApproveView;
-import incerpay.paygate.infrastructure.external.dto.CardApiCancelView;
-import incerpay.paygate.infrastructure.external.dto.CardApiCertifyView;
-import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiView;
+import incerpay.paygate.infrastructure.external.dto.*;
 import incerpay.paygate.presentation.dto.in.*;
 import incerpay.paygate.presentation.dto.out.ApiAdapterView;
+import incerpay.paygate.presentation.dto.out.ApiMessageAdapterView;
+import incerpay.paygate.presentation.dto.out.ApiSuccessAdapterView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -80,6 +79,7 @@ public class CardApiAdapter implements PaymentApiAdapter {
         log.info("api.confirm: " + view.toString());
 
         IncerPaymentApiApproveCommand paymentCommand = incerPaymentApiMapper.toApiApproveCommand(paymentApproveCommand);
+        log.info("paymentCommand: " + paymentCommand.toString());
         IncerPaymentApiView paymentView = incerPaymentApi.approve(paymentCommand);
         log.info("incerPaymentApi.confirm: " + paymentView.toString());
 
@@ -87,12 +87,23 @@ public class CardApiAdapter implements PaymentApiAdapter {
     }
 
     private ApiAdapterView createApiAdapterView(IncerPaymentApiView paymentView) {
-        return new ApiAdapterView(
-            paymentView.paymentId(),
-            UUID.randomUUID(),
-            paymentView.sellerId(),
-            paymentView.state(),
-            paymentView.price()
-        );
+
+        if(paymentView.data() instanceof IncerPaymentSuccessData data) {
+            return new ApiSuccessAdapterView(
+                data.paymentId(),
+                UUID.randomUUID(),
+                data.sellerId(),
+                data.state(),
+                data.price()
+            );
+        }
+
+        if(paymentView.data() instanceof IncerPaymentMessageData data) {
+            return new ApiMessageAdapterView(
+                    data.message()
+            );
+        }
+
+        throw new RuntimeException();
     }
 }

@@ -1,5 +1,6 @@
 package incerpay.paygate.infrastructure.external;
 
+import incerpay.paygate.common.config.FeignConfig;
 import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiListView;
 import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Component
-@FeignClient(name = "IncerPaymentApi", url = "http://localhost:8082")
+@FeignClient(name = "IncerPaymentApi", url = "http://localhost:8082", configuration = FeignConfig.class)
 public interface IncerPaymentApi {
 
-    @PostMapping("/payment/request")
+    @PostMapping("/payment/quote")
     IncerPaymentApiView request(@RequestBody IncerPaymentApiRequestCommand command);
 
     @PostMapping("/payment/approve")
