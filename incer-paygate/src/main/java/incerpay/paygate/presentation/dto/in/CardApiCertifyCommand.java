@@ -5,6 +5,6 @@ public record CardApiCertifyCommand(
         String cvc,
         String expireDate,
         String cardCompany,
-        String customerId
+        String customerName
 ) {}
 

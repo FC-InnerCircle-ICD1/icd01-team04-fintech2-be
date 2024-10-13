@@ -12,7 +12,7 @@ public class IncerPaymentApiMapper {
 
         return new IncerPaymentApiRequestCommand(
                 paymentRequestCommand.customerId(),
-                paymentRequestCommand.amount().longValue(),
+                paymentRequestCommand.price().longValue(),
                 LocalDateTime.now()
         );
     }

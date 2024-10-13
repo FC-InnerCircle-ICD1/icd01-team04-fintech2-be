@@ -24,21 +24,21 @@ public class PaymentGatewayController {
     }
 
     @AuthorizationPublicKeyHeader
-    @PostMapping("/confirm")
+    @PostMapping("/{paymentId}/confirm")
     public Response confirm(@RequestBody PaymentApproveCommand command) {
         PaymentStateView view = service.confirm(command);
         return Response.ok(view);
     }
 
     @AuthorizationPublicKeyHeader
-    @PutMapping("/cancel")
+    @PutMapping("/{paymentId}/cancel")
     public Response cancel(@RequestBody PaymentCancelCommand command) {
         PaymentStateView view = service.cancel(command);
         return Response.ok(view);
     }
 
     @AuthorizationPublicKeyHeader
-    @PutMapping("/reject")
+    @PutMapping("/{paymentId}/reject")
     public Response reject(@RequestBody PaymentRejectCommand command) {
         PaymentStateView view = service.reject(command);
         return Response.ok(view);

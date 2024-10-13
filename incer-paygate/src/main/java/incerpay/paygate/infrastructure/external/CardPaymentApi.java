@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "CardPaymentApi", url = "http://localhost:8081")
 public interface CardPaymentApi {
 
-    @PostMapping("/card/certify")
+    @PostMapping("api/card/certify")
     CardApiCertifyView certify(CardApiCertifyCommand command);
 
-    @PostMapping("/card/cancel")
+    @PostMapping("api/card/cancel")
     CardApiCancelView cancel(CardApiCancelCommand command);
 
-    @PostMapping("/card/pay")
+    @PostMapping("api/card/pay")
     CardApiApproveView pay(CardApiApproveCommand command);
 
 }

@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 public record PaymentRequestCommand(
      String customerId,
      String orderId,
-     BigDecimal amount,
+     BigDecimal price,
      PaymentType type,
+     String successUrl,
+     String failUrl,
      PaymentMethodDetails paymentMethodDetails
 ) {}
 

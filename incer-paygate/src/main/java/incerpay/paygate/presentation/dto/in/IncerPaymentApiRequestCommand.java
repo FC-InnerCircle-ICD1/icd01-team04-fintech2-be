@@ -4,6 +4,6 @@ import java.time.LocalDateTime;
 
 public record IncerPaymentApiRequestCommand(
         String sellerId,
-        Long amount,
+        Long price,
         LocalDateTime expiredAt
 ) {}

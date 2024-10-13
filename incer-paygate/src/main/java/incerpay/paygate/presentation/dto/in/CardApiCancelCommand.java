@@ -4,8 +4,7 @@ import java.util.UUID;
 
 public record CardApiCancelCommand(
         String customerId,
-        UUID paymendId,
-        UUID transactionId,
-        String paymentType
+        UUID paymentId,
+        UUID transactionId
 ) {}
 

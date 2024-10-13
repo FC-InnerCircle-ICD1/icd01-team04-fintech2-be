@@ -7,6 +7,9 @@ import java.util.UUID;
 
 public record PaymentApproveCommand(
         String customerId,
+        String customerName,
+
+        String orderId,
         UUID paymentId,
         UUID transactionId,
         PaymentType type,

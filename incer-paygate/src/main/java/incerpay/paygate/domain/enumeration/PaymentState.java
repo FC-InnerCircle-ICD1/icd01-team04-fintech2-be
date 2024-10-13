@@ -1,10 +1,11 @@
-package incerpay.paygate.domain.vo;
+package incerpay.paygate.domain.enumeration;
 
 public enum PaymentState {
-    PENDING,
     APPROVED,
     CANCELED,
     REJECTED,
+    CERTIFIED,
     TIMEOUT,
-    FINISHED
+    INVALID
 }
+
