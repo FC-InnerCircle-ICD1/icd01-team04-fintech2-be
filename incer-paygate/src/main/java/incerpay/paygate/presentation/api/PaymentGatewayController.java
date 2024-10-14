@@ -44,16 +44,24 @@ public class PaymentGatewayController {
         return Response.ok(view);
     }
 
+
     @AuthorizationSecretKeyHeader
-    @GetMapping("/status/payment/{paymentId}")
-    public Response readStatusByPaymentId(@RequestParam String paymentId) {
+    @GetMapping("/{paymentId}")
+    public Response readStatusByPaymentId(@PathVariable("paymentId") String paymentId) {
         PaymentStateView view = service.readStatusByPaymentId(paymentId);
         return Response.ok(view);
     }
 
     @AuthorizationSecretKeyHeader
-    @GetMapping("/status/transaction/{transactionId}")
-    public Response readStatusByTransactionId(@RequestParam String transactionId) {
+    @GetMapping("/seller/{sellerId}")
+    public Response readStatusBySellerId(@PathVariable("sellerId") String sellerId) {
+        PaymentStateView view = service.readStatusBySellerId(sellerId);
+        return Response.ok(view);
+    }
+
+    @AuthorizationSecretKeyHeader
+    @GetMapping("/transaction/{transactionId}")
+    public Response readStatusByTransactionId(@PathVariable("transactionId") String transactionId) {
         PaymentStateView view = service.readStatusByTransactionId(transactionId);
         return Response.ok(view);
     }

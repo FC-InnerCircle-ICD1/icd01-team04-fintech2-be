@@ -28,7 +28,11 @@ public interface IncerPaymentApi {
     @PostMapping("/payment/reject")
     IncerPaymentApiView reject(@RequestBody IncerPaymentApiRejectCommand command);
 
-    @GetMapping("/payment/seller/{sellerId}")
+    @GetMapping("/payment/seller/{sellerId}/list")
     IncerPaymentApiListView readBySellerId(@PathVariable("sellerId") String sellerId);
+
+    @GetMapping("/payment/seller/{sellerId}/detail/{paymentId}")
+    IncerPaymentApiListView readByPaymentId(@PathVariable("sellerId") String sellerId,
+                                            @PathVariable("paymentId") String paymentId);
 
 }

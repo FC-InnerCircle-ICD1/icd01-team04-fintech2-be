@@ -3,6 +3,7 @@ package incerpay.paygate.application.service;
 import incerpay.paygate.application.factory.PaymentApiAdapterFactory;
 import incerpay.paygate.domain.component.*;
 import incerpay.paygate.domain.vo.PaymentIdentification;
+import incerpay.paygate.domain.vo.SellerIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
 import incerpay.paygate.presentation.dto.in.*;
 import incerpay.paygate.presentation.dto.out.*;
@@ -57,19 +58,28 @@ public class PaymentGatewayService {
     }
 
     @Transactional
-    public PaymentStateView readStatusByPaymentId(String paymentId) {
-        PaymentIdentification id = new PaymentIdentification(paymentId);
+    public PaymentStateView readStatusBySellerId(String sellerId) {
+        SellerIdentification id = new SellerIdentification(sellerId);
         validator.validate(id);
-        ApiStatusView apiView = commonApiAdapter.readStatus(id);
-        return viewer.read(apiView);
+        PersistenceView pv = commonApiAdapter.readStatusBySellerId(id);
+        return viewer.read(pv);
+    }
+
+    @Transactional
+    public PaymentStateView readStatusByPaymentId(String paymentId) {
+        // TODO seller가 있어야 하는지 확인 필요
+        PaymentIdentification id = new PaymentIdentification("seller", paymentId);
+        validator.validate(id);
+        PersistenceView pv = commonApiAdapter.readStatusByPaymentId(id);
+        return viewer.read(pv);
     }
 
     @Transactional
     public PaymentStateView readStatusByTransactionId(String transactionId) {
         TransactionIdentification id = new TransactionIdentification(transactionId);
         validator.validate(id);
-        ApiStatusView apiView = commonApiAdapter.readStatus(id);
-        return viewer.read(apiView);
+        PersistenceView pv = commonApiAdapter.readStatusByTransactionId(id);
+        return viewer.read(pv);
     }
 
 }

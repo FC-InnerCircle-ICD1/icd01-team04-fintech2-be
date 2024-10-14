@@ -1,6 +1,7 @@
 package incerpay.paygate.domain.component;
 
 import incerpay.paygate.domain.vo.PaymentIdentification;
+import incerpay.paygate.domain.vo.SellerIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
 import incerpay.paygate.presentation.dto.in.*;
 
@@ -11,4 +12,5 @@ public interface PaymentGatewayValidator {
     void validate(PaymentRejectCommand command);
     void validate(PaymentIdentification command);
     void validate(TransactionIdentification command);
+    void validate(SellerIdentification command);
 }

@@ -1,6 +1,7 @@
 package incerpay.paygate.domain.component;
 
 import incerpay.paygate.domain.vo.PaymentIdentification;
+import incerpay.paygate.domain.vo.SellerIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
 import incerpay.paygate.presentation.dto.in.PaymentApproveCommand;
 import incerpay.paygate.presentation.dto.in.PaymentCancelCommand;
@@ -29,4 +30,7 @@ public class CardGatewayValidator implements PaymentGatewayValidator {
 
     @Override
     public void validate(TransactionIdentification command) {}
+
+    @Override
+    public void validate(SellerIdentification command) { }
 }
