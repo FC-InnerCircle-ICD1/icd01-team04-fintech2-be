@@ -1,0 +1,49 @@
+
+### 가맹점 조회
+GET http://localhost:1234/seller/{sellerId}?sellerId=1
+
+
+### 가맹점 등록
+GET http://localhost:1234/seller?sellerId=1&sellerName=IncerPay2
+
+
+### 카드 등록
+POST http://localhost:1234/seller/card
+Content-Type: application/json
+
+{
+  "sellerId": 1,
+  "paymentMethod": [
+    "CREDIT_CARD"
+  ],
+  "cardCompany": [
+    "NH"
+  ]
+}
+
+### 가맹점 카드 리스트 확인 - 개발 필요
+GET http://localhost:1234/seller/12345/cards
+
+
+### 이용 카드 리스트 수정 - 개발 필요
+PUT http://localhost:1234/seller/12345/cards
+Content-Type: application/json
+
+{
+  "cardCompanyCode": ["030", "050"]
+}
+
+### 키 검증
+GET http://localhost:1234/apikey
+?sellerId=1
+&apiKey=test_06912cb6f5eb4a87aef5f5f147898128
+&apiKeyState=TEST
+
+### 키 발급
+POST http://localhost:1234/apikey
+Content-Type: application/json
+
+{
+  "sellerId": 1,
+  "apiKeyState": "TEST"
+}

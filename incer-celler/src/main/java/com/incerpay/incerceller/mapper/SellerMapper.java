@@ -3,9 +3,11 @@ package com.incerpay.incerceller.mapper;
 import com.incerpay.incerceller.adapter.out.persistence.jpa.entity.SellerEntity;
 import com.incerpay.incerceller.domain.Seller;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class SellerMapper {
 
@@ -32,6 +34,8 @@ public class SellerMapper {
 		return Seller.builder()
 				.sellerName(sellerEntity.getSellerName())
 				.sellerId(sellerEntity.getSellerId())
+				.paymentMethods(sellerEntity.getPaymentMethods())
+				.cardCompanies(sellerEntity.getCardCompanies())
 				.apiKeyInfos(sellerEntity.getApiKeyInfos().stream()
 						.map(apikeyInfoMapper::toDomain).toList())
 				.build();

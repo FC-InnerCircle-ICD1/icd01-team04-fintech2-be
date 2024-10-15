@@ -1,5 +1,4 @@
 package com.incerpay.incerceller.domain;
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum PaymentMethod {
     CREDIT_CARD("신용/체크 카드"),
