@@ -1,10 +1,13 @@
 package com.incerpay.incerceller.mapper;
 
+import com.incerpay.incerceller.adapter.out.persistence.jpa.entity.ApiKeyInfoEntity;
 import com.incerpay.incerceller.adapter.out.persistence.jpa.entity.SellerEntity;
 import com.incerpay.incerceller.domain.Seller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @Slf4j
@@ -22,9 +25,19 @@ public class SellerMapper {
 	}
 
 	public SellerEntity toSaveEntity(Seller seller) {
+
+		List<ApiKeyInfoEntity> apiKeyInfoEntities = List.of();
+
+		if (seller.getApiKeyInfos() != null && !seller.getApiKeyInfos().isEmpty()) {
+			apiKeyInfoEntities = seller.getApiKeyInfos().stream()
+					.map(apikeyInfoMapper::toEntity)
+					.toList();
+		}
+
 		return SellerEntity.builder()
 				.sellerId(seller.getSellerId())
 				.sellerName(seller.getSellerName())
+				.apiKeyInfos(apiKeyInfoEntities)
 				.paymentMethods(seller.getPaymentMethods())
 				.cardCompanies(seller.getCardCompanies())
 				.build();
