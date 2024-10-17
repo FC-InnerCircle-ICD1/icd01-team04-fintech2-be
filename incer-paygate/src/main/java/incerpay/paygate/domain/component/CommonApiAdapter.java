@@ -3,10 +3,9 @@ package incerpay.paygate.domain.component;
 import incerpay.paygate.domain.vo.PaymentIdentification;
 import incerpay.paygate.domain.vo.SellerIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
-import incerpay.paygate.infrastructure.external.dto.IncerPaymentSuccessData;
+import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiDataView;
 import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
 import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiListView;
-import incerpay.paygate.presentation.dto.out.PersistenceSuccessView;
 import incerpay.paygate.presentation.dto.out.PersistenceView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -53,13 +52,13 @@ public class CommonApiAdapter {
 
     private PersistenceView paymentViewToPersistenceView(IncerPaymentApiListView view) {
 
-        if(view.payments().size() > 0 && view.payments().get(0) instanceof IncerPaymentSuccessData data) {
-            return new PersistenceSuccessView(
-                    data.paymentId(),
+        if(view.payments().size() > 0) {
+            return new PersistenceView(
+                    view.payments().get(0).paymentId(),
                     UUID.randomUUID(),
-                    data.sellerId(),
-                    data.state(),
-                    data.price()
+                    view.payments().get(0).sellerId(),
+                    view.payments().get(0).state(),
+                    view.payments().get(0).price()
             );
         }
 

@@ -1,7 +1,6 @@
 package incerpay.paygate.domain.component;
 
-import incerpay.paygate.infrastructure.external.dto.IncerPaymentMessageData;
-import incerpay.paygate.infrastructure.external.dto.IncerPaymentSuccessData;
+import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiDataView;
 import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
 import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
@@ -52,23 +51,13 @@ public class PaymentPersistenceAdapter {
 
     private PersistenceView paymentViewToPersistenceView(IncerPaymentApiView view) {
 
-        if(view.data() instanceof IncerPaymentSuccessData data) {
-            return new PersistenceSuccessView(
-                    data.paymentId(),
-                    UUID.randomUUID(),
-                    data.sellerId(),
-                    data.state(),
-                    data.price()
-            );
-        }
-
-        if(view.data() instanceof IncerPaymentMessageData data) {
-            return new PersistenceMessageView(
-                    data.message()
-            );
-        }
-
-        throw new RuntimeException();
+        return new PersistenceView(
+                view.data().paymentId(),
+                UUID.randomUUID(),
+                view.data().sellerId(),
+                view.data().state(),
+                view.data().price()
+        );
 
     }
 }

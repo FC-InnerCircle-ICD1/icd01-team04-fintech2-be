@@ -1,7 +1,14 @@
 package incerpay.paygate.infrastructure.external.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import incerpay.paygate.infrastructure.external.IncerPaymentApiDataViewDeserializer;
+import incerpay.paygate.domain.enumeration.PaymentState;
 
-@JsonDeserialize(using = IncerPaymentApiDataViewDeserializer.class)
-public interface IncerPaymentApiDataView { }
+import java.util.UUID;
+
+public record IncerPaymentApiDataView(
+        UUID paymentId,
+        String sellerId,
+        PaymentState state,
+        Long price
+) {
+
+}

@@ -6,8 +6,6 @@ import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
 import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
 import incerpay.paygate.presentation.dto.out.ApiAdapterView;
-import incerpay.paygate.presentation.dto.out.ApiMessageAdapterView;
-import incerpay.paygate.presentation.dto.out.ApiSuccessAdapterView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -89,22 +87,13 @@ public class CardApiAdapter implements PaymentApiAdapter {
 
     private ApiAdapterView createApiAdapterView(IncerPaymentApiView paymentView) {
 
-        if(paymentView.data() instanceof IncerPaymentSuccessData data) {
-            return new ApiSuccessAdapterView(
-                    data.paymentId(),
+            return new ApiAdapterView(
+                    paymentView.data().paymentId(),
                     UUID.randomUUID(),
-                    data.sellerId(),
-                    data.state(),
-                    data.price()
+                    paymentView.data().sellerId(),
+                    paymentView.data().state(),
+                    paymentView.data().price()
             );
-        }
-
-        if(paymentView.data() instanceof IncerPaymentMessageData data) {
-            return new ApiMessageAdapterView(
-                    data.message()
-            );
-        }
-
-        throw new RuntimeException();
     }
 }
+

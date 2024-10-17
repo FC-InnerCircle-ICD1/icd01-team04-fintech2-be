@@ -11,7 +11,7 @@ public class IncerPaymentApiMapper {
     public IncerPaymentApiRequestCommand toApiRequestCommand(PaymentRequestCommand paymentRequestCommand) {
 
         return new IncerPaymentApiRequestCommand(
-                paymentRequestCommand.customerId(),
+                paymentRequestCommand.sellerId(),
                 paymentRequestCommand.price().longValue(),
                 LocalDateTime.now()
         );

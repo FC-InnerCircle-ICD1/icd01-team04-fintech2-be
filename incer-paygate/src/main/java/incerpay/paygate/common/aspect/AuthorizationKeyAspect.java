@@ -54,7 +54,7 @@ public class AuthorizationKeyAspect {
         for (Object arg : args) {
 
             if (arg instanceof PaymentRequestCommand command) {
-                sellerId = Long.parseLong(command.customerId());
+                sellerId = Long.parseLong(command.sellerId());
             } else if (arg instanceof PaymentApproveCommand command) {
                 sellerId = Long.parseLong(command.sellerId());
             } else if (arg instanceof PaymentCancelCommand command) {
