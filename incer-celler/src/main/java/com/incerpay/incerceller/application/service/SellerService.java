@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -21,22 +23,29 @@ public class SellerService implements GetSellerUseCase, AssignSellerUseCase, Ass
 
 	@Override
 	public Seller getSeller(Long sellerId) {
-		return selectSellerPort.selectSeller(sellerId);
+		return getSellerOrThrow(sellerId);
 	}
 
 	@Override
 	@Transactional
 	public void assignSeller(Long sellerId, String sellerName) {
+
+		if(getOptionalSeller(sellerId).isPresent()) {
+			throw new IllegalArgumentException("기 가입 사용자 아이디입니다.");
+		}
+
 		saveSellerPort.saveSeller(Seller.builder()
 				.sellerId(sellerId)
 				.sellerName(sellerName).build());
+
+
 	}
 
 	@Override
 	@Transactional
 	public void assignCard(CardRegisterRequest request) {
 
-		Seller seller = getSeller(request.sellerId());
+		Seller seller = getSellerOrThrow(request.sellerId());
 
 		saveSellerPort.saveSeller(Seller.builder()
 				.sellerId(request.sellerId())
@@ -44,6 +53,20 @@ public class SellerService implements GetSellerUseCase, AssignSellerUseCase, Ass
 				.apiKeyInfos(seller.getApiKeyInfos())
 				.paymentMethods(request.paymentMethod())
 				.cardCompanies(request.cardCompany()).build());
+	}
+
+	private Optional<Seller> getOptionalSeller(Long sellerId) {
+
+		try{
+			return Optional.ofNullable(selectSellerPort.selectSeller(sellerId));
+		} catch (IllegalArgumentException ex) {
+			return Optional.empty();
+		}
+
+	}
+
+	private Seller getSellerOrThrow(Long sellerId) {
+		return selectSellerPort.selectSeller(sellerId);
 	}
 
 }

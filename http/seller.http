@@ -1,18 +1,12 @@
-
-### 가맹점 조회
-GET http://localhost:1234/seller/{sellerId}?sellerId=1
-
-
 ### 가맹점 등록
 GET http://localhost:1234/seller?sellerId=1&sellerName=IncerPay2
-
 
 ### 카드 등록
 POST http://localhost:1234/seller/card
 Content-Type: application/json
 
 {
-  "sellerId": 1,
+  "sellerId": 5,
   "paymentMethod": [
     "CREDIT_CARD"
   ],
