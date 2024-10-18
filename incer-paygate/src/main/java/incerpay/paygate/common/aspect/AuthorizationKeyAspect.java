@@ -45,27 +45,12 @@ public class AuthorizationKeyAspect {
 
         String apiKey = request.getHeader("Authorization");
         String apiKeyState = request.getHeader("X-Api-Key-State");
+        Long sellerId = Long.parseLong(request.getHeader("X-Client-Id"));
 
-        log.info("Authorization apiKey: {}, apiKeyState: {}" + apiKey + apiKeyState);
 
-        Object[] args = joinPoint.getArgs();
-        Long sellerId = 0L;
+        log.info("Authorization apiKey: {}, apiKeyState: {}, sellerId : {}", apiKey, apiKeyState, sellerId);
 
-        for (Object arg : args) {
 
-            if (arg instanceof PaymentRequestCommand command) {
-                sellerId = Long.parseLong(command.sellerId());
-            } else if (arg instanceof PaymentApproveCommand command) {
-                sellerId = Long.parseLong(command.sellerId());
-            } else if (arg instanceof PaymentCancelCommand command) {
-                sellerId = Long.parseLong(command.sellerId());
-            } else if (arg instanceof PaymentRejectCommand command) {
-                sellerId = Long.parseLong(command.sellerId());
-            } else {
-                throw new IllegalArgumentException("Need Seller Id");
-            }
-
-        }
 
         if (method.isAnnotationPresent(AuthorizationPublicKeyHeader.class)) {
             authorizationPublicKeyVerifier.verify(sellerId, apiKey, apiKeyState);
