@@ -2,8 +2,6 @@ package incerpay.paygate.domain.component;
 
 import incerpay.paygate.infrastructure.external.CardPaymentApi;
 import incerpay.paygate.infrastructure.external.dto.*;
-import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
-import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
 import incerpay.paygate.presentation.dto.out.ApiAdapterView;
 import lombok.extern.slf4j.Slf4j;
@@ -16,84 +14,83 @@ import java.util.UUID;
 public class CardApiAdapter implements PaymentApiAdapter {
 
     private final CardPaymentApi api;
-    private final IncerPaymentApi incerPaymentApi;
     private final PaymentCardApiMapper mapper;
-    private final IncerPaymentApiMapper incerPaymentApiMapper;
 
     public CardApiAdapter(CardPaymentApi api,
-                          PaymentCardApiMapper mapper,
-                          IncerPaymentApi incerPaymentApi,
-                          IncerPaymentApiMapper incerPaymentApiMapper) {
+                          PaymentCardApiMapper mapper) {
         this.api = api;
         this.mapper = mapper;
-        this.incerPaymentApi = incerPaymentApi;
-        this.incerPaymentApiMapper = incerPaymentApiMapper;
     }
 
     @Override
     public ApiAdapterView request(PaymentRequestCommand paymentRequestCommand) {
 
-        CardApiCertifyCommand command = mapper.toApiCertifyCommand(paymentRequestCommand);
+        CardApiCertifyCommand command = mapper.toApiCommand(paymentRequestCommand);
         CardApiCertifyView view = api.certify(command);
         log.info("api.certify: " + view.toString());
 
-        IncerPaymentApiRequestCommand paymentCommand = incerPaymentApiMapper.toApiRequestCommand(paymentRequestCommand);
-        IncerPaymentApiView paymentView = incerPaymentApi.request(paymentCommand);
-        log.info("incerPaymentApi.request: " + paymentView.toString());
-
-        return createApiAdapterView(paymentView);
+        return createApiAdapterView(view);
     }
 
     @Override
     public ApiAdapterView cancel(PaymentCancelCommand paymentCancelCommand) {
 
-        CardApiCancelCommand command = mapper.toApiCancelCommand(paymentCancelCommand);
+        CardApiCancelCommand command = mapper.toApiCommand(paymentCancelCommand);
         CardApiCancelView view = api.cancel(command);
         log.info("api.cancel: " + view.toString());
 
-        IncerPaymentApiCancelCommand paymentCommand = incerPaymentApiMapper.toApiCancelCommand(paymentCancelCommand);
-        IncerPaymentApiView paymentView = incerPaymentApi.cancel(paymentCommand);
-        log.info("incerPaymentApi.cancel: " + paymentView.toString());
-
-        return createApiAdapterView(paymentView);
+        return createApiAdapterView(view);
     }
 
     @Override
     public ApiAdapterView reject(PaymentRejectCommand paymentRejectCommand) {
-        CardApiCancelCommand command = mapper.toApiCancelCommand(paymentRejectCommand);
+
+        CardApiCancelCommand command = mapper.toApiCommand(paymentRejectCommand);
         CardApiCancelView view = api.cancel(command);
         log.info("api.reject: " + view.toString());
 
-        IncerPaymentApiRejectCommand paymentCommand = incerPaymentApiMapper.toApiRejectCommand(paymentRejectCommand);
-        IncerPaymentApiView paymentView = incerPaymentApi.reject(paymentCommand);
-        log.info("incerPaymentApi.reject: " + paymentView.toString());
-
-        return createApiAdapterView(paymentView);
+        return createApiAdapterView(view);
     }
 
     @Override
     public ApiAdapterView confirm(PaymentApproveCommand paymentApproveCommand) {
-        CardApiApproveCommand command = mapper.toApiApproveCommand(paymentApproveCommand);
+        CardApiApproveCommand command = mapper.toApiCommand(paymentApproveCommand);
         CardApiApproveView view = api.pay(command);
         log.info("api.confirm: " + view.toString());
 
-        IncerPaymentApiApproveCommand paymentCommand = incerPaymentApiMapper.toApiApproveCommand(paymentApproveCommand);
-        log.info("paymentCommand: " + paymentCommand.toString());
-        IncerPaymentApiView paymentView = incerPaymentApi.approve(paymentCommand);
-        log.info("incerPaymentApi.confirm: " + paymentView.toString());
-
-        return createApiAdapterView(paymentView);
+        return createApiAdapterView(view);
     }
 
-    private ApiAdapterView createApiAdapterView(IncerPaymentApiView paymentView) {
-
-            return new ApiAdapterView(
-                    paymentView.data().paymentId(),
-                    UUID.randomUUID(),
-                    paymentView.data().sellerId(),
-                    paymentView.data().state(),
-                    paymentView.data().price()
-            );
+    private ApiAdapterView createApiAdapterView(CardApiCertifyView view) {
+        return new ApiAdapterView(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                view.sellerId(),
+                view.state(),
+                view.price()
+        );
     }
+
+    private ApiAdapterView createApiAdapterView(CardApiCancelView view) {
+
+        return new ApiAdapterView(
+                view.paymentId(),
+                UUID.randomUUID(),
+                view.sellerId(),
+                view.state(),
+                0L
+        );
+    }
+
+    private ApiAdapterView createApiAdapterView(CardApiApproveView view) {
+        return new ApiAdapterView(
+                view.paymentId(),
+                view.transactionId(),
+                view.sellerId(),
+                view.state(),
+                view.price()
+        );
+    }
+
 }
 

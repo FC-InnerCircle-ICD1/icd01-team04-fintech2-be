@@ -11,11 +11,24 @@ public class CardGatewayViewer implements PaymentGatewayViewer{
 
     @Override
     public PaymentStateView read(PersistenceView pv) {
-        return null;
+        return new PaymentStateView(
+                pv.paymentId(),
+                pv.transactionId(),
+                pv.sellerId(),
+                pv.state(),
+                pv.price()
+            );
     }
 
     @Override
     public PaymentStateView read(ApiStatusView apiStatusView) {
-        return null;
+
+        return new PaymentStateView(
+                apiStatusView.paymentId(),
+                apiStatusView.transactionId(),
+                apiStatusView.sellerId(),
+                apiStatusView.state(),
+                apiStatusView.price()
+        );
     }
 }

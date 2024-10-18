@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaymentCardApiMapper {
 
-    public CardApiCertifyCommand toApiCertifyCommand(PaymentRequestCommand paymentRequestCommand) {
+    public CardApiCertifyCommand toApiCommand(PaymentRequestCommand paymentRequestCommand) {
 
         log.info("paymentRequestCommand: " + paymentRequestCommand.toString());
 
@@ -24,7 +24,7 @@ public class PaymentCardApiMapper {
         );
     }
 
-    public CardApiCancelCommand toApiCancelCommand(PaymentCancelCommand paymentCancelCommand) {
+    public CardApiCancelCommand toApiCommand(PaymentCancelCommand paymentCancelCommand) {
         log.info("paymentCancelCommand: " + paymentCancelCommand.toString());
         return new CardApiCancelCommand(
                 paymentCancelCommand.sellerId(),
@@ -33,7 +33,7 @@ public class PaymentCardApiMapper {
         );
     }
 
-    public CardApiCancelCommand toApiCancelCommand(PaymentRejectCommand paymentRejectCommand) {
+    public CardApiCancelCommand toApiCommand(PaymentRejectCommand paymentRejectCommand) {
         log.info("paymentRejectCommand: " + paymentRejectCommand.toString());
         return new CardApiCancelCommand(
                 paymentRejectCommand.sellerId(),
@@ -42,7 +42,7 @@ public class PaymentCardApiMapper {
         );
     }
 
-    public CardApiApproveCommand toApiApproveCommand(PaymentApproveCommand paymentApproveCommand) {
+    public CardApiApproveCommand toApiCommand(PaymentApproveCommand paymentApproveCommand) {
         log.info("paymentApproveCommand: " + paymentApproveCommand.toString());
 
         CardPaymentDetails details = (CardPaymentDetails) paymentApproveCommand.paymentMethodDetails();

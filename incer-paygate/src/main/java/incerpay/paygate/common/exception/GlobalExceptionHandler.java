@@ -1,11 +1,10 @@
 package incerpay.paygate.common.exception;
 
 import feign.FeignException;
+import incerpay.paygate.common.lib.response.Response;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,20 +19,20 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
+    public Response handleException(Exception ex) {
         log.error("Internal server error", ex);
-        return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        return Response.error("Internal server error");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public Response handleIllegalArgumentException(IllegalArgumentException ex) {
         String errorMessage = ex.getMessage() != null ? ex.getMessage() : "Bad request";
         log.error(errorMessage, ex);
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return Response.fail(errorMessage);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public Response handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = error instanceof FieldError ? ((FieldError) error).getField() : "unknown";
@@ -41,11 +40,11 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         log.error("Validation errors: {}", errors);
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return Response.fail(errors);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public Response handleConstraintViolationException(ConstraintViolationException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getConstraintViolations().forEach(violation -> {
             String fieldName = violation.getPropertyPath().toString();
@@ -53,28 +52,28 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         log.error("Constraint violations: {}", errors);
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return Response.fail(errors);
     }
 
     @ExceptionHandler(InvalidApiKeyException.class)
-    public ResponseEntity<String> handleInvalidApiKeyException(InvalidApiKeyException ex) {
+    public Response handleInvalidApiKeyException(InvalidApiKeyException ex) {
         String errorMessage = ex.getMessage() != null ? ex.getMessage() : "Bad request";
         log.error(errorMessage, ex);
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return Response.fail(errorMessage);
     }
 
     @ExceptionHandler(FeignException.class)
-    public ResponseEntity<String> handleFeignException(FeignException ex) {
+    public Response handleFeignException(FeignException ex) {
         String errorMessage = ex.getMessage() != null ? ex.getMessage() : "Bad request";
         log.error(errorMessage, ex);
-        return new ResponseEntity<>("거래 실패", HttpStatus.BAD_REQUEST);
+        return Response.fail("거래 실패");
     }
 
     @ExceptionHandler(IncerPaymentStoreApiFeignException.class)
-    public ResponseEntity<String> handleIncerPaymentStoreApiFeignException(IncerPaymentStoreApiFeignException ex) {
+    public Response handleIncerPaymentStoreApiFeignException(IncerPaymentStoreApiFeignException ex) {
         String errorMessage = ex.getMessage()  != null ? ex.getMessage() : "Bad request";
         log.error(errorMessage, ex);
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return Response.fail(errorMessage);
     }
 
 

@@ -9,6 +9,8 @@ public record CardApiCertifyView(
         String cardNumber,
         String customerName,
         String certifyNumber,
+        Long price,
+        String sellerId,
         LocalDateTime requestAt,
         LocalDateTime certifiedAt
 ) {}
