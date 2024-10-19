@@ -4,19 +4,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.incerpay.incerceller.application.dto.CardRegisterRequest;
 import com.incerpay.incerceller.domain.CardCompany;
 import com.incerpay.incerceller.domain.PaymentMethod;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class SellerControllerTest {
@@ -26,6 +31,14 @@ class SellerControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        mockMvc.perform(get("/seller")
+                        .param("sellerId", "0")
+                        .param("sellerName", "sellerName"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void paymentMethod가_NULL_cardCompany가_NULL_실패() throws Exception {

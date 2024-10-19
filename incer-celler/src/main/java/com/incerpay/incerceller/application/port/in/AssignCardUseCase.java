@@ -1,11 +1,8 @@
 package com.incerpay.incerceller.application.port.in;
 
-import com.incerpay.incerceller.domain.CardCompany;
-import com.incerpay.incerceller.domain.PaymentMethod;
-
-import java.util.List;
+import com.incerpay.incerceller.application.dto.CardRegisterRequest;
 
 public interface AssignCardUseCase {
-    void assignCard(Long sellerId, List<PaymentMethod> paymentMethods, List<CardCompany> cardCompanies);
+    void assignCard(CardRegisterRequest cardRegisterRequest);
 
 }
