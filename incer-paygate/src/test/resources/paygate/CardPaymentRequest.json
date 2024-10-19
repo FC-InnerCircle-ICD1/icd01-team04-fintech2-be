@@ -1,0 +1,14 @@
+{
+  "sellerId": "1",
+  "orderId": "orderId",
+  "price": 100000,
+  "type": "CARD",
+  "successUrl": "http://localhost:8080/success",
+  "failUrl": "http://localhost:8080/fail",
+  "paymentMethodDetails": {
+    "cardNumber": "1234-1234-1234-1234",
+    "cvc": "123",
+    "expireDate": "02/27",
+    "cardCompany": "030"
+  }
+}

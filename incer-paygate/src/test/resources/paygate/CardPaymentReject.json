@@ -1,0 +1,6 @@
+{
+  "sellerId": "1",
+  "paymentId": "123e4567-e89b-12d3-a456-426614174000",
+  "transactionId": "987e6543-e89b-12d3-a456-426614174111",
+  "type": "CARD"
+}
