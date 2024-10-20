@@ -61,7 +61,7 @@ public class PaymentPersistenceAdapter {
                 UUID.randomUUID(),
                 view.data().sellerId(),
                 view.data().state(),
-                view.data().price()
+                view.data().amount()
         );
 
     }

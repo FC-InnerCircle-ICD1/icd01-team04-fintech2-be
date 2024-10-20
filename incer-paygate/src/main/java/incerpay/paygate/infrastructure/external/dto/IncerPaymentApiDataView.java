@@ -8,7 +8,7 @@ public record IncerPaymentApiDataView(
         UUID paymentId,
         String sellerId,
         PaymentState state,
-        Long price
+        Long amount
 ) {
 
 }

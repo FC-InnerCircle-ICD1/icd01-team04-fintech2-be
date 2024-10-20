@@ -60,7 +60,7 @@ public class CommonApiAdapter {
                 UUID.randomUUID(),
                 view.payments().get(0).sellerId(),
                 view.payments().get(0).state(),
-                view.payments().get(0).price()
+                view.payments().get(0).amount()
         );
 
     }
