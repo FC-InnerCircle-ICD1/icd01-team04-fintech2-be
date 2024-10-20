@@ -71,6 +71,7 @@ public class Payment {
                 .build();
         PaymentLedger approved = PaymentLedger.builder()
                 .paymentProperty(this.paymentProperty)
+                .payment(this)
                 .build();
         this.paymentLedgers.add(approved);
         switch (currentState) {
@@ -88,6 +89,7 @@ public class Payment {
                 .build();
         PaymentLedger confirmed = PaymentLedger.builder()
                 .paymentProperty(this.paymentProperty)
+                .payment(this)
                 .build();
         this.paymentLedgers.add(confirmed);
         switch (currentState){
@@ -105,6 +107,7 @@ public class Payment {
                 .build();
         PaymentLedger canceled = PaymentLedger.builder()
                 .paymentProperty(this.paymentProperty)
+                .payment(this)
                 .build();
         this.paymentLedgers.add(canceled);
         switch (currentState){
@@ -124,6 +127,7 @@ public class Payment {
                 .build();
         PaymentLedger rejected = PaymentLedger.builder()
                 .paymentProperty(this.paymentProperty)
+                .payment(this)
                 .build();
         this.paymentLedgers.add(rejected);
         switch (currentState){
@@ -143,6 +147,7 @@ public class Payment {
                 .build();
         PaymentLedger settled = PaymentLedger.builder()
                 .paymentProperty(this.paymentProperty)
+                .payment(this)
                 .build();
         this.paymentLedgers.add(settled);
         switch (currentState) {

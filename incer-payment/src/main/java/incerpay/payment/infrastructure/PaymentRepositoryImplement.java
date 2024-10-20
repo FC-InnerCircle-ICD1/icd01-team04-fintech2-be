@@ -1,7 +1,7 @@
 package incerpay.payment.infrastructure;
 
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import incerpay.payment.common.dto.PaymentDetailView;
 import incerpay.payment.common.dto.PaymentLedgerView;
@@ -82,15 +82,17 @@ public class PaymentRepositoryImplement implements PaymentRepository, PaymentVie
                 .where(payment.sellerId.eq(sellerId)
                         .and(payment.id.eq(UUID.fromString(paymentId))))
                 .fetch();
+
         PaymentDetailView result = jpaQueryFactory.select(Projections.constructor(PaymentDetailView.class,
                         payment.id,
                         payment.sellerId,
                         payment.paymentProperty.state,
                         payment.paymentProperty.amount,
-                        (Expression<?>) ledgerList
+                        Expressions.constant(ledgerList)
                 ))
                 .from(payment)
-                .where(payment.sellerId.eq(sellerId).and(payment.id.eq(UUID.fromString(paymentId)))
+                .where(payment.sellerId.eq(sellerId)
+                        .and(payment.id.eq(UUID.fromString(paymentId)))
                 )
                 .fetchOne();
         return result;
