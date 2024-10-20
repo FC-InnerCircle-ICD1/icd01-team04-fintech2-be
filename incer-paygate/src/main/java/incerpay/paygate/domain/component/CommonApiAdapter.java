@@ -3,7 +3,6 @@ package incerpay.paygate.domain.component;
 import incerpay.paygate.domain.vo.PaymentIdentification;
 import incerpay.paygate.domain.vo.SellerIdentification;
 import incerpay.paygate.domain.vo.TransactionIdentification;
-import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiDataView;
 import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
 import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiListView;
 import incerpay.paygate.presentation.dto.out.PersistenceView;
@@ -52,17 +51,17 @@ public class CommonApiAdapter {
 
     private PersistenceView paymentViewToPersistenceView(IncerPaymentApiListView view) {
 
-        if(view.payments().size() > 0) {
-            return new PersistenceView(
-                    view.payments().get(0).paymentId(),
-                    UUID.randomUUID(),
-                    view.payments().get(0).sellerId(),
-                    view.payments().get(0).state(),
-                    view.payments().get(0).price()
-            );
+        if(view.payments().size() == 0) {
+            throw new RuntimeException();
         }
 
-        throw new RuntimeException();
+        return new PersistenceView(
+                view.payments().get(0).paymentId(),
+                UUID.randomUUID(),
+                view.payments().get(0).sellerId(),
+                view.payments().get(0).state(),
+                view.payments().get(0).price()
+        );
 
     }
 }
