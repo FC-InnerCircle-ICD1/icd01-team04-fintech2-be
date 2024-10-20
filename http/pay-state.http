@@ -1,5 +1,5 @@
 ### 결제 요청
-POST http://localhost:8080/payment/request
+POST http://localhost:5555/payment/request
 Authorization: Public-Key
 Content-Type: application/json
 
@@ -8,8 +8,8 @@ Content-Type: application/json
   "orderId": "orderId",
   "price": 100000,
   "type": "CARD",
-  "successUrl": "http://localhost:8080/success",
-  "failUrl": "http://localhost:8080/fail",
+  "successUrl": "http://localhost:5555/success",
+  "failUrl": "http://localhost:5555/fail",
   "paymentMethodDetails": {
       "cardNumber": "1234-1234-1234-1234",
       "cvc": "123",
@@ -20,7 +20,7 @@ Content-Type: application/json
 }
 
 ### 결제 승인
-POST http://localhost:8080/payment/12345/confirm
+POST http://localhost:5555/payment/12345/confirm
 Authorization: Public-Key
 Content-Type: application/json
 
@@ -45,7 +45,7 @@ Content-Type: application/json
 
 
 ### 결제 취소
-PUT http://localhost:8080/payment/12345/cancel
+PUT http://localhost:5555/payment/12345/cancel
 Authorization: Public-Key
 Content-Type: application/json
 
@@ -58,7 +58,7 @@ Content-Type: application/json
 
 
 ### 결제 환불
-PUT http://localhost:8080/payment/12345/reject
+PUT http://localhost:5555/payment/12345/reject
 Authorization: Public-Key
 Content-Type: application/json
 
@@ -70,18 +70,18 @@ Content-Type: application/json
 }
 
 ### 카드 리스트 확인
-GET http://localhost:8080/cards
+GET http://localhost:5555/cards
 Authorization: Public-Key
 
 ### 결제 정보 확인
-GET http://localhost:8080/payment/12345
+GET http://localhost:5555/payment/12345
 Authorization: Secret-Key
 
 ### 거래 정보 확인
-GET http://localhost:8080/payment/seller/56789
+GET http://localhost:5555/payment/seller/56789
 Authorization: Secret-Key
 
 
 ### 거래 정보 확인
-GET http://localhost:8080/payment/transaction/67890
+GET http://localhost:5555/payment/transaction/67890
 Authorization: Secret-Key

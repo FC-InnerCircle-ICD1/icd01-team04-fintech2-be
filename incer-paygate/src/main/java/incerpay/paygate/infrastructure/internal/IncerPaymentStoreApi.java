@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Component
-@FeignClient(name = "IncerPaymentStoreApi", url = "${api.store.url}")
+@FeignClient(name = "IncerPaymentStoreApi", url = "${api.seller.url}")
 public interface IncerPaymentStoreApi {
 
     @GetMapping("/apikey")
