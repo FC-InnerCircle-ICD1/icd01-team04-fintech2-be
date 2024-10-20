@@ -24,7 +24,7 @@ public class PaymentPersistenceAdapter {
 
 
     public PersistenceView request(PaymentRequestCommand paymentRequestCommand) {
-        IncerPaymentApiRequestCommand command = incerPaymentApiMapper.toApiRequestCommand(paymentRequestCommand);
+        IncerPaymentApiRequestCommand command = incerPaymentApiMapper.toApiCommand(paymentRequestCommand);
         IncerPaymentApiView view = incerPaymentApi.request(command);
         log.info("incerPaymentApi.request: " + view.toString());
         return paymentViewToPersistenceView(view);
@@ -32,7 +32,7 @@ public class PaymentPersistenceAdapter {
 
 
     public PersistenceView cancel(PaymentCancelCommand paymentCancelCommand) {
-        IncerPaymentApiCancelCommand command = incerPaymentApiMapper.toApiCancelCommand(paymentCancelCommand);
+        IncerPaymentApiCancelCommand command = incerPaymentApiMapper.toApiCommand(paymentCancelCommand);
         IncerPaymentApiView view = incerPaymentApi.cancel(command);
         log.info("incerPaymentApi.cancel: " + view.toString());
         return paymentViewToPersistenceView(view);
@@ -40,7 +40,7 @@ public class PaymentPersistenceAdapter {
 
 
     public PersistenceView reject(PaymentRejectCommand paymentRejectCommand) {
-        IncerPaymentApiRejectCommand command = incerPaymentApiMapper.toApiRejectCommand(paymentRejectCommand);
+        IncerPaymentApiRejectCommand command = incerPaymentApiMapper.toApiCommand(paymentRejectCommand);
         IncerPaymentApiView view = incerPaymentApi.reject(command);
         log.info("incerPaymentApi.reject: " + view.toString());
         return paymentViewToPersistenceView(view);
@@ -48,7 +48,7 @@ public class PaymentPersistenceAdapter {
 
 
     public PersistenceView approve(PaymentApproveCommand paymentApproveCommand) {
-        IncerPaymentApiApproveCommand command = incerPaymentApiMapper.toApiApproveCommand(paymentApproveCommand);
+        IncerPaymentApiApproveCommand command = incerPaymentApiMapper.toApiCommand(paymentApproveCommand);
         IncerPaymentApiView view = incerPaymentApi.approve(command);
         log.info("incerPaymentApi.approve: " + view.toString());
         return paymentViewToPersistenceView(view);

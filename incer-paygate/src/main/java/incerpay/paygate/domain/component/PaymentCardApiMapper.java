@@ -49,9 +49,9 @@ public class PaymentCardApiMapper {
         CardApproveDetails approveDetails = (CardApproveDetails) paymentApproveCommand.paymentApproveDetails();
 
 
-
         return new CardApiApproveCommand(
                 paymentApproveCommand.sellerId(),
+                paymentApproveCommand.customerName(),
                 approveDetails.getInstallmentPeriod(),
                 approveDetails.getPrice(),
                 approveDetails.getCardIdentityCertifyNumber(),

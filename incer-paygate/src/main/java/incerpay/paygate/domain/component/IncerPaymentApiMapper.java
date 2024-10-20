@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Component
 public class IncerPaymentApiMapper {
 
-    public IncerPaymentApiRequestCommand toApiRequestCommand(PaymentRequestCommand paymentRequestCommand) {
+    public IncerPaymentApiRequestCommand toApiCommand(PaymentRequestCommand paymentRequestCommand) {
 
         return new IncerPaymentApiRequestCommand(
                 paymentRequestCommand.sellerId(),
@@ -17,22 +17,22 @@ public class IncerPaymentApiMapper {
         );
     }
 
-    public IncerPaymentApiCancelCommand toApiCancelCommand(PaymentCancelCommand paymentCancelCommand) {
+    public IncerPaymentApiCancelCommand toApiCommand(PaymentCancelCommand paymentCancelCommand) {
         return new IncerPaymentApiCancelCommand(
-                paymentCancelCommand.transactionId()
+                paymentCancelCommand.paymentId()
         );
     }
 
-    public IncerPaymentApiRejectCommand toApiRejectCommand(PaymentRejectCommand paymentRejectCommand) {
+    public IncerPaymentApiRejectCommand toApiCommand(PaymentRejectCommand paymentRejectCommand) {
         return new IncerPaymentApiRejectCommand(
-                paymentRejectCommand.transactionId()
+                paymentRejectCommand.paymentId()
         );
     }
 
-    public IncerPaymentApiApproveCommand toApiApproveCommand(PaymentApproveCommand paymentApproveCommand) {
+    public IncerPaymentApiApproveCommand toApiCommand(PaymentApproveCommand paymentApproveCommand) {
 
         return new IncerPaymentApiApproveCommand(
-                paymentApproveCommand.transactionId()
+                paymentApproveCommand.paymentId()
         );
     }
 }

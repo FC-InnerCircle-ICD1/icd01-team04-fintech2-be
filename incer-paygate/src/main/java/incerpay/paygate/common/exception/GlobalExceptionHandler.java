@@ -66,6 +66,7 @@ public class GlobalExceptionHandler {
     public Response handleFeignException(FeignException ex) {
         String errorMessage = ex.getMessage() != null ? ex.getMessage() : "Bad request";
         log.error(errorMessage, ex);
+        // TODO payment 에러 메시지 그대로 반환?
         return Response.fail("거래 실패");
     }
 
