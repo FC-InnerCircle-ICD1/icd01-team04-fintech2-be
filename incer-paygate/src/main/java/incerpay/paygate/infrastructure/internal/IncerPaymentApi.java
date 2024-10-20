@@ -30,9 +30,9 @@ public interface IncerPaymentApi {
 
     @GetMapping("/payment/seller/{sellerId}/list")
     IncerPaymentApiListView readBySellerId(@PathVariable("sellerId") String sellerId);
-
+    
     @GetMapping("/payment/seller/{sellerId}/detail/{paymentId}")
-    IncerPaymentApiListView readByPaymentId(@PathVariable("sellerId") String sellerId,
-                                            @PathVariable("paymentId") String paymentId);
+    IncerPaymentApiView readByPaymentId(@PathVariable("sellerId") String sellerId,
+                                        @PathVariable("paymentId") String paymentId);
 
 }

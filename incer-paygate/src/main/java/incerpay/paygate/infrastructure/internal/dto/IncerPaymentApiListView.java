@@ -7,5 +7,9 @@ import java.util.List;
 public record IncerPaymentApiListView(
         int resultCode,
         String resultMsg,
-        List<IncerPaymentApiDataView> payments
-) {}
+        Data data
+) {
+    public record Data(
+            List<IncerPaymentApiDataView> payments
+    ) {}
+}

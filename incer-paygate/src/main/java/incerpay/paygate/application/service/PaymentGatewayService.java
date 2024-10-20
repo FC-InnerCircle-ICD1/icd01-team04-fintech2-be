@@ -5,12 +5,13 @@ import incerpay.paygate.domain.component.*;
 import incerpay.paygate.domain.enumeration.PaymentType;
 import incerpay.paygate.domain.vo.PaymentIdentification;
 import incerpay.paygate.domain.vo.SellerIdentification;
-import incerpay.paygate.domain.vo.TransactionIdentification;
 import incerpay.paygate.presentation.dto.in.*;
 import incerpay.paygate.presentation.dto.out.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -55,29 +56,28 @@ public class PaymentGatewayService {
     }
 
     @Transactional
-    public PaymentStateView readStatusBySellerId(String sellerId) {
+    public PaymentStateListView readStatusBySellerId(String sellerId) {
         SellerIdentification id = new SellerIdentification(sellerId);
         validator.validate(id);
-        PersistenceView pv = commonApiAdapter.readStatusBySellerId(id);
+        List<PersistenceView> pv = commonApiAdapter.readStatusBySellerId(id);
         return viewer.read(pv);
     }
 
     @Transactional
-    public PaymentStateView readStatusByPaymentId(String paymentId) {
-        // TODO seller가 있어야 하는지 확인 필요
-        PaymentIdentification id = new PaymentIdentification("seller", paymentId);
+    public PaymentStateView readStatusByPaymentId(String sellerId, String paymentId) {
+        PaymentIdentification id = new PaymentIdentification(sellerId, paymentId);
         validator.validate(id);
         PersistenceView pv = commonApiAdapter.readStatusByPaymentId(id);
         return viewer.read(pv);
     }
 
-    @Transactional
-    public PaymentStateView readStatusByTransactionId(String transactionId) {
-        TransactionIdentification id = new TransactionIdentification(transactionId);
-        validator.validate(id);
-        PersistenceView pv = commonApiAdapter.readStatusByTransactionId(id);
-        return viewer.read(pv);
-    }
+//    @Transactional
+//    public PaymentStateView readStatusByTransactionId(String transactionId) {
+//        TransactionIdentification id = new TransactionIdentification(transactionId);
+//        validator.validate(id);
+//        PersistenceView pv = commonApiAdapter.readStatusByTransactionId(id);
+//        return viewer.read(pv);
+//    }
 
 
     private PaymentApiAdapter getMatchedPaymentApi(PaymentType paymentType) {
