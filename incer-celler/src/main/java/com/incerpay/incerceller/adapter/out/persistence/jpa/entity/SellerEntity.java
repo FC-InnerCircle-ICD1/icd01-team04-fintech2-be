@@ -33,4 +33,9 @@ public class SellerEntity extends BaseEntity {
 		apiKeyInfos.add(apiKeyInfo);
 	}
 
+	public void updateCardList(List<CardCompany> cardCompanies, List<PaymentMethod> paymentMethods) {
+		this.cardCompanies = cardCompanies;
+		this.paymentMethods = paymentMethods;
+	}
+
 }

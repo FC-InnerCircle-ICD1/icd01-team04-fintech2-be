@@ -34,6 +34,13 @@ public class SellerAdaptor implements SelectSellerPort, UpdateSellerPort, SaveSe
 	}
 
 	@Override
+	public void updateSellerCardList(Long sellerId, List<CardCompany> cardCompanies, List<PaymentMethod> paymentMethods) {
+		SellerEntity seller = sellerRepository.findById(sellerId)
+				.orElseThrow(() -> new IllegalArgumentException("상점을 찾을 수 없습니다."));
+		seller.updateCardList(cardCompanies,paymentMethods);
+	}
+
+	@Override
 	public void saveSeller(Seller seller) {
 		sellerRepository.save(sellerMapper.toSaveEntity(seller));
 	}
