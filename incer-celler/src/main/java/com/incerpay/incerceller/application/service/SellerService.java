@@ -6,6 +6,7 @@ import com.incerpay.incerceller.application.port.in.AssignSellerUseCase;
 import com.incerpay.incerceller.application.port.in.GetSellerUseCase;
 import com.incerpay.incerceller.application.port.out.SaveSellerPort;
 import com.incerpay.incerceller.application.port.out.SelectSellerPort;
+import com.incerpay.incerceller.application.port.out.UpdateSellerPort;
 import com.incerpay.incerceller.domain.Seller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,55 +19,32 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SellerService implements GetSellerUseCase, AssignSellerUseCase, AssignCardUseCase {
 
-	private final SelectSellerPort selectSellerPort;
-	private final SaveSellerPort saveSellerPort;
+    private final SelectSellerPort selectSellerPort;
+    private final SaveSellerPort saveSellerPort;
+    private final UpdateSellerPort updateSellerPort;
 
-	@Override
-	public Seller getSeller(Long sellerId) {
-		return getSellerOrThrow(sellerId);
-	}
+    @Override
+    public Seller getSeller(Long sellerId) {
+        return getSellerOrThrow(sellerId);
+    }
 
-	@Override
-	@Transactional
-	public void assignSeller(Long sellerId, String sellerName) {
+    @Override
+    @Transactional
+    public void assignSeller(Long sellerId, String sellerName) {
+        saveSellerPort.saveSeller(Seller.builder()
+                .sellerId(sellerId)
+                .sellerName(sellerName).build());
+    }
 
-		if(getOptionalSeller(sellerId).isPresent()) {
-			throw new IllegalArgumentException("기 가입 사용자 아이디입니다.");
-		}
+    @Override
+    @Transactional
+    public void assignCard(CardRegisterRequest request) {
+        //todo : sevice 레이어에선 커맨드 사용
+        updateSellerPort.updateSellerCardList(request.sellerId(), request.cardCompany(), request.paymentMethod());
+    }
 
-		saveSellerPort.saveSeller(Seller.builder()
-				.sellerId(sellerId)
-				.sellerName(sellerName).build());
-
-
-	}
-
-	@Override
-	@Transactional
-	public void assignCard(CardRegisterRequest request) {
-
-		Seller seller = getSellerOrThrow(request.sellerId());
-
-		saveSellerPort.saveSeller(Seller.builder()
-				.sellerId(request.sellerId())
-				.sellerName(seller.getSellerName())
-				.apiKeyInfos(seller.getApiKeyInfos())
-				.paymentMethods(request.paymentMethod())
-				.cardCompanies(request.cardCompany()).build());
-	}
-
-	private Optional<Seller> getOptionalSeller(Long sellerId) {
-
-		try{
-			return Optional.ofNullable(selectSellerPort.selectSeller(sellerId));
-		} catch (IllegalArgumentException ex) {
-			return Optional.empty();
-		}
-
-	}
-
-	private Seller getSellerOrThrow(Long sellerId) {
-		return selectSellerPort.selectSeller(sellerId);
-	}
+    private Seller getSellerOrThrow(Long sellerId) {
+        return selectSellerPort.selectSeller(sellerId);
+    }
 
 }
