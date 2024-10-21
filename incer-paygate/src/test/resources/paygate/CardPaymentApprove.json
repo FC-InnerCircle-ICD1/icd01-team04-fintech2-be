@@ -1,0 +1,18 @@
+{
+  "sellerId": "1",
+  "orderId": "orderId",
+  "paymentId": "8b1806ab-ad22-4a28-9e7a-3bc6cb805d5a",
+  "transactionId": "c631268d-c4ea-478c-b4c0-50df9b1d1d0c",
+  "type": "CARD",
+  "paymentApproveDetails": {
+    "installmentPeriod": 3,
+    "price": 10000,
+    "cardIdentityCertifyNumber": "cert1234"
+  },
+  "paymentMethodDetails" :{
+    "cardNumber": "1234-5678-9012-3456",
+    "cvc": "123",
+    "expireDate": "12/26",
+    "cardCompany": "030"
+  }
+}

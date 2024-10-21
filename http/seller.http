@@ -1,43 +1,49 @@
 ### 가맹점 등록
-GET http://localhost:1234/seller?sellerId=1&sellerName=IncerPay2
+GET http://localhost:2222/seller?sellerId=12345&sellerName=12345
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
-### 카드 등록
-POST http://localhost:1234/seller/card
+### 가맹점 조회
+GET http://localhost:2222/seller/12345
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+### 가맹점 카드 등록
+POST http://localhost:2222/seller/card
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 {
-  "sellerId": 5,
-  "paymentMethod": [
-    "CREDIT_CARD"
-  ],
-  "cardCompany": [
-    "NH"
-  ]
+  "sellerId": 12345,
+  "paymentMethod": ["CREDIT_CARD", "NAVER"],
+  "cardCompany": ["NH", "KB"]
 }
 
-### 가맹점 카드 리스트 확인 - 개발 필요
-GET http://localhost:1234/seller/12345/cards
+### 가맹점 카드 리스트 확인
+GET http://localhost:2222/seller/12345/cards
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
-
-### 이용 카드 리스트 수정 - 개발 필요
-PUT http://localhost:1234/seller/12345/cards
+### 이용 카드 리스트 수정
+PUT http://localhost:2222/seller/12345/cards
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 {
   "cardCompanyCode": ["030", "050"]
 }
 
 ### 키 검증
-GET http://localhost:1234/apikey
-?sellerId=1
-&apiKey=test_06912cb6f5eb4a87aef5f5f147898128
-&apiKeyState=TEST
+GET http://localhost:2222/apikey
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 ### 키 발급
-POST http://localhost:1234/apikey
+POST http://localhost:2222/apikey
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 {
-  "sellerId": 1,
+  "sellerId": 12345,
   "apiKeyState": "TEST"
 }
+
+### 테스트 키 / 라이브 키 조회
+GET http://localhost:2222/apikey
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
