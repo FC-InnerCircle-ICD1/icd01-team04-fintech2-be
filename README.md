@@ -30,7 +30,7 @@
 - 결제 : [URL](http://43.202.59.167:1111/swagger-ui/index.html)
 - 회원 : [URL](http://43.202.59.167:2222/swagger-ui/index.html)
 - 상점 : [URL](http://43.202.59.167:3333/swagger-ui/index.html)
-- [외부 결제 ocking용 API 서버](https://github.com/kail-is/simple-payment-api) : [URL](http://43.202.59.167:1234/swagger-ui/index.html)
+- [외부 결제 Mocking용 API 서버](https://github.com/kail-is/simple-payment-api) : [URL](http://43.202.59.167:1234/swagger-ui/index.html)
 
 > 배포 임시 EC2 -> ECS 수정 예정
 
@@ -49,9 +49,12 @@
 
 - [x] 다양한 결제 수단을 지원하는 결제 처리 기능을 구현한다. (현재 CARD만 가능하나, 확장성 있게 구현 완료)
 - [x] 거래 승인, 취소, 환불 등의 거래 상태를 실시간으로 관리하고 추적할 수 있어야 한다.
-- [ ] 고가용성 및 장애 복구: 24/7 복구할 수 있는 아키텍처 - 이중화(HA) 및 장애 조치(failover) : 진행 중
+
+* [진행 중 내용](https://github.com/FC-InnerCircle/icd01-team04-fintech2-be/issues/7)
+- [ ] 고가용성 및 장애 복구: 24/7 복구할 수 있는 아키텍처 - 이중화(HA) 및 장애 조치(failover) 
 - [ ] 결제 실패 및 오류 처리: 다양한 실패 시나리오 처리, 재시도 로직으로 사용자 경험 개선 : 진행 중
 - [ ] RESTful API 및 다양한 프로그래밍 언어에 대한 SDK를 제공 : 시간이 된다면 진행 욕심
+
 
 
 - **4조 BE**
