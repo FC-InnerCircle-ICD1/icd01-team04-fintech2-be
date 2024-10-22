@@ -21,18 +21,19 @@
 
 ## API Request URL
 
-- 결제 SDK : [URL](http://43.202.59.167:5555/)
+- 결제 SDK : [URL]
 - 상점 ADMIN : 로그인 만들어지지 않음
 
 ## API SWAGGER / Repository
 
-- 결제 게이트웨이 : [URL](http://43.202.59.167:5555/swagger-ui/index.html)
-- 결제 : [URL](http://43.202.59.167:1111/swagger-ui/index.html)
-- 회원 : [URL](http://43.202.59.167:2222/swagger-ui/index.html)
-- 상점 : [URL](http://43.202.59.167:3333/swagger-ui/index.html)
+- 결제 게이트웨이 : [URL]
+- 결제 : [URL]
+- 회원 : [URL]
+- 상점 : [URL]
 - [외부 결제 Mocking용 API 서버](https://github.com/kail-is/simple-payment-api) : [URL](http://43.202.59.167:1234/swagger-ui/index.html)
 
-> 배포 임시 EC2 -> ECS 수정 예정
+
+> 배포 정상화 후 URL 재첨부 예정
 
 ## 로컬 구동
 
