@@ -21,15 +21,17 @@
 
 ## API Request URL
 
-- 결제 SDK : [URL]
+- 결제 SDK : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:5555)
 - 상점 ADMIN : 로그인 만들어지지 않음
 
 ## API SWAGGER / Repository
 
-- 결제 게이트웨이 : [URL]
-- 결제 : [URL]
-- 회원 : [URL]
-- 상점 : [URL]
+> 기본 데이터 테스트를 위한 포트 노출
+
+- 결제 게이트웨이 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:5555)
+- 결제 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:2222)
+- 회원 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:1111)
+- 상점 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:3333)
 - [외부 결제 Mocking용 API 서버](https://github.com/kail-is/simple-payment-api) : [URL](http://43.202.59.167:1234/swagger-ui/index.html)
 
 
