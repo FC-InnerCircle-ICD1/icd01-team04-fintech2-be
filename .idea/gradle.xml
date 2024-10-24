@@ -9,6 +9,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/incer-celler" />
+            <option value="$PROJECT_DIR$/incer-member" />
+            <option value="$PROJECT_DIR$/incer-paygate" />
+            <option value="$PROJECT_DIR$/incer-payment" />
           </set>
         </option>
       </GradleProjectSettings>

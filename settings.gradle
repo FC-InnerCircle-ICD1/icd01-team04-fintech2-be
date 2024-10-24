@@ -1,2 +1,3 @@
 rootProject.name = 'icd01-team04-fintech2-be'
 
+include 'incer-payment', 'incer-member', 'incer-celler', 'incer-paygate'
