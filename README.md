@@ -26,22 +26,29 @@
 
 ## API SWAGGER / Repository
 
-> 기본 데이터 테스트를 위한 포트 노출
+- 결제 게이트웨이: [Swagger](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:5555/swagger-ui/index.html)
+- 결제: [Swagger](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:1111/swagger-ui/index.html)
+- 회원: [Swagger](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:2222/swagger-ui/index.html)
+- 상점: [Swagger](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:3333/swagger-ui/index.html)
+- [외부 결제 Mocking용 API 서버](https://github.com/kail-is/simple-payment-api): [Swagger](http://43.202.59.167:1234/swagger-ui/index.html)
 
-- 결제 게이트웨이 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:5555)
-- 결제 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:2222)
-- 회원 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:1111)
-- 상점 : [URL](http://ec2-43-202-59-167.ap-northeast-2.compute.amazonaws.com:3333)
-- [외부 결제 Mocking용 API 서버](https://github.com/kail-is/simple-payment-api) : [URL](http://43.202.59.167:1234/swagger-ui/index.html)
-
-
-> 배포 정상화 후 URL 재첨부 예정
 
 ## 로컬 구동
 
-- docker-compose 세팅
+- docker-compose 세팅 
+- 프로젝트 루트 경로에서 Makefile 실행
 
-> 수정 중
+```bash
+make
+```
+
+- 결제 게이트웨이 : http://localhost:5555
+- 결제 : http://localhost:1111
+- 회원 : http://localhost:2222
+- 상점 : http://localhost:3333
+
+* [API 명세서](https://github.com/FC-InnerCircle/icd01-team04-fintech2-be/wiki/API-%EB%AA%85%EC%84%B8%EC%84%9C)
+
 
 ## 개발 요구사항 및 진척도 / 누락 부분 정리
 
