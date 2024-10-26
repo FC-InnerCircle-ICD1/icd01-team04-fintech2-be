@@ -1,27 +1,31 @@
 ### 결제 요청
-POST http://localhost:5555/payment/request
-Authorization: Public-Key
+POST http://localhost:8080/payment/request
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
 Content-Type: application/json
 
 {
-  "customerId": "customerId",
+  "sellerId": "1",
   "orderId": "orderId",
-  "price": 100000,
+  "price": 770,
   "type": "CARD",
-  "successUrl": "http://localhost:5555/success",
-  "failUrl": "http://localhost:5555/fail",
+  "successUrl": "http://localhost:8080/success",
+  "failUrl": "http://localhost:8080/fail",
   "paymentMethodDetails": {
       "cardNumber": "1234-1234-1234-1234",
       "cvc": "123",
       "expireDate": "02/27",
-      "cardCompany": "030",
-      "installmentPeriod": 0
+      "cardCompany": "030"
   }
 }
 
+
 ### 결제 승인
-POST http://localhost:5555/payment/12345/confirm
-Authorization: Public-Key
+POST http://localhost:8080/payment/12345/confirm
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
 Content-Type: application/json
 
 {
@@ -45,8 +49,10 @@ Content-Type: application/json
 
 
 ### 결제 취소
-PUT http://localhost:5555/payment/12345/cancel
-Authorization: Public-Key
+PUT http://localhost:8080/payment/12345/cancel
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
 Content-Type: application/json
 
 {
@@ -58,8 +64,10 @@ Content-Type: application/json
 
 
 ### 결제 환불
-PUT http://localhost:5555/payment/12345/reject
-Authorization: Public-Key
+PUT http://localhost:8080/payment/12345/reject
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
 Content-Type: application/json
 
 {
@@ -70,18 +78,30 @@ Content-Type: application/json
 }
 
 ### 카드 리스트 확인
-GET http://localhost:5555/cards
-Authorization: Public-Key
+GET http://localhost:8080/cards
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
+Content-Type: application/json
 
 ### 결제 정보 확인
-GET http://localhost:5555/payment/12345
-Authorization: Secret-Key
+GET http://localhost:8080/payment/12345
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
+Content-Type: application/json
 
 ### 거래 정보 확인
-GET http://localhost:5555/payment/seller/56789
-Authorization: Secret-Key
+GET http://localhost:8080/payment/seller/56789
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
+Content-Type: application/json
 
 
 ### 거래 정보 확인
-GET http://localhost:5555/payment/transaction/67890
-Authorization: Secret-Key
+GET http://localhost:8080/payment/transaction/67890
+Authorization: Bearer test_356184d6e871497fa7ae736acc514b29
+X-Api-Key-State: TEST
+X-Client-Id: 1
+Content-Type: application/json

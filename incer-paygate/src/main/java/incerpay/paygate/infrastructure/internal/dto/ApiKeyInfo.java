@@ -3,7 +3,9 @@ package incerpay.paygate.infrastructure.internal.dto;
 import incerpay.paygate.domain.enumeration.ApiKeyState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class ApiKeyInfo {
