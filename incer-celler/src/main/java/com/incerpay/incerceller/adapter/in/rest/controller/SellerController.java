@@ -22,7 +22,7 @@ public class SellerController implements SellerControllerDocs {
 
 	@Override
 	@GetMapping("/{sellerId}")
-	public ResponseEntity<?> getSeller(@RequestParam Long sellerId) {
+	public ResponseEntity<?> getSeller(@PathVariable Long sellerId) {
 		Seller seller = getSellerUseCase.getSeller(sellerId);
 		return ResponseEntity.ok(seller);
 	}
