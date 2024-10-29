@@ -15,10 +15,12 @@ build: stop
 	docker build -t incer-celler:0.0.1-SNAPSHOT ./incer-celler
 	docker build -t incer-paygate:0.0.1-SNAPSHOT ./incer-paygate
 
-# 모든 서비스 중지
+# 저장소 이외 서비스 중지
 stop:
 	@echo "Docker Compose 서비스 중지"
-	docker-compose down
+	docker-compose stop incer-payment incer-member incer-celler incer-paygate
+	docker-compose rm -f incer-payment incer-member incer-celler incer-paygate
+
 
 # 모든 로그 확인
 logs:
