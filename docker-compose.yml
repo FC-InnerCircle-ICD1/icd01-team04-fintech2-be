@@ -3,6 +3,10 @@ services:
   incer-paygate:
     container_name: incer-paygate
     image: incer-paygate:0.0.1-SNAPSHOT
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/paymentDB
     ports:
       - "8080:8080"
     networks:
@@ -31,6 +35,15 @@ services:
       - "3333:8080"
     networks:
       -   incerpay_network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - incerpay_network
+
 
 networks:
   incerpay_network:

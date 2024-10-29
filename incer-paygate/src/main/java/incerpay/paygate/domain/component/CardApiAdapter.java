@@ -1,5 +1,7 @@
 package incerpay.paygate.domain.component;
 
+import incerpay.paygate.domain.status.PaymentRealtimeState;
+import incerpay.paygate.domain.status.PaymentRealtimeStateService;
 import incerpay.paygate.infrastructure.external.CardPaymentApi;
 import incerpay.paygate.infrastructure.external.dto.*;
 import incerpay.paygate.presentation.dto.in.*;
@@ -15,11 +17,14 @@ public class CardApiAdapter implements PaymentApiAdapter {
 
     private final CardPaymentApi api;
     private final PaymentCardApiMapper mapper;
+    private final PaymentRealtimeStateService paymentService;
 
     public CardApiAdapter(CardPaymentApi api,
-                          PaymentCardApiMapper mapper) {
+                          PaymentCardApiMapper mapper,
+                          PaymentRealtimeStateService paymentRealtimeStateService) {
         this.api = api;
         this.mapper = mapper;
+        this.paymentService = paymentRealtimeStateService;
     }
 
     @Override
@@ -54,9 +59,15 @@ public class CardApiAdapter implements PaymentApiAdapter {
 
     @Override
     public ApiAdapterView confirm(PaymentApproveCommand paymentApproveCommand) {
+
+        PaymentRealtimeState state = savePaymentRealTimeState(paymentApproveCommand);
         CardApiApproveCommand command = mapper.toApiCommand(paymentApproveCommand);
+
         CardApiApproveView view = api.pay(command);
         log.info("api.confirm: " + view.toString());
+
+        PaymentRealtimeState savedState = updatePayState(state);
+        log.info("updatePayState: " + savedState);
 
         return createApiAdapterView(view);
     }
@@ -91,6 +102,22 @@ public class CardApiAdapter implements PaymentApiAdapter {
                 view.price()
         );
     }
+
+    private PaymentRealtimeState savePaymentRealTimeState(PaymentApproveCommand command) {
+
+        PaymentRealtimeState state
+                = new PaymentRealtimeState(command.paymentId(), command.transactionId());
+        paymentService.savePayment(state);
+
+        return state;
+    }
+
+
+    private PaymentRealtimeState updatePayState(PaymentRealtimeState state) {
+        state.pay();
+        return paymentService.savePayment(state);
+    }
+
 
 }
 
