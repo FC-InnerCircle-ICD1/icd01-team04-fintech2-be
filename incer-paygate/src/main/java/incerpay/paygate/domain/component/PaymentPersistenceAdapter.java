@@ -1,5 +1,7 @@
 package incerpay.paygate.domain.component;
 
+import incerpay.paygate.domain.status.PaymentRealtimeState;
+import incerpay.paygate.domain.status.PaymentRealtimeStateService;
 import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
 import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
@@ -15,11 +17,14 @@ public class PaymentPersistenceAdapter {
 
     private final IncerPaymentApi incerPaymentApi;
     private final IncerPaymentApiMapper incerPaymentApiMapper;
+    private final PaymentRealtimeStateService paymentService;
 
     public PaymentPersistenceAdapter(IncerPaymentApi incerPaymentApi,
-                                     IncerPaymentApiMapper incerPaymentApiMapper) {
+                                     IncerPaymentApiMapper incerPaymentApiMapper,
+                                     PaymentRealtimeStateService paymentService) {
         this.incerPaymentApi = incerPaymentApi;
         this.incerPaymentApiMapper = incerPaymentApiMapper;
+        this.paymentService = paymentService;
     }
 
 
@@ -48,9 +53,16 @@ public class PaymentPersistenceAdapter {
 
 
     public PersistenceView approve(PaymentApproveCommand paymentApproveCommand) {
+
+        PaymentRealtimeState state = getPaymentRealTimeState(paymentApproveCommand);
         IncerPaymentApiApproveCommand command = incerPaymentApiMapper.toApiCommand(paymentApproveCommand);
+
         IncerPaymentApiView view = incerPaymentApi.approve(command);
         log.info("incerPaymentApi.approve: " + view.toString());
+
+        PaymentRealtimeState savedState = updatePersistenceState(state);
+        log.info("updatePersistenceState: " + savedState);
+
         return paymentViewToPersistenceView(view);
     }
 
@@ -65,4 +77,14 @@ public class PaymentPersistenceAdapter {
         );
 
     }
+
+    private PaymentRealtimeState getPaymentRealTimeState(PaymentApproveCommand command) {
+        return paymentService.getPaymentRealTimeState(command);
+    }
+
+    private PaymentRealtimeState updatePersistenceState(PaymentRealtimeState state) {
+        state.save();
+        return paymentService.savePayment(state);
+    }
+
 }
