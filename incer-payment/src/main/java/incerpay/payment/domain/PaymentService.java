@@ -24,6 +24,7 @@ public class PaymentService {
     @Transactional
     public PaymentView quote(PaymentQuoteCommand command) {
         Payment payment = factory.create(command);
+        validator.validateForQuote(payment);
         repository.save(payment);
         return viewer.readPayment(payment.id());
     }
