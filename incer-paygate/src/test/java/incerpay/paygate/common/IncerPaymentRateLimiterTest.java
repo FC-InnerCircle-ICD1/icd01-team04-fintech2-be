@@ -7,10 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -61,8 +62,11 @@ class IncerPaymentRateLimiterTest {
         when(valueOperations.increment("burst:" + testIp)).thenReturn(BURST_LIMIT + 1);
         when(valueOperations.increment("window:" + testIp)).thenReturn(WINDOW_LIMIT);
 
+        // when
+        boolean result = rateLimiter.confirmAllowed(testIp);
+
         // then
-        assertThrows(RuntimeException.class, () -> rateLimiter.confirmAllowed(testIp));
+        assertFalse(result);
     }
 
     @Test
@@ -75,18 +79,26 @@ class IncerPaymentRateLimiterTest {
         when(valueOperations.increment("burst:" + testIp)).thenReturn(BURST_LIMIT);
         when(valueOperations.increment("window:" + testIp)).thenReturn(WINDOW_LIMIT + 1);
 
+        // when
+        boolean result = rateLimiter.confirmAllowed(testIp);
+
         // then
-        assertThrows(RuntimeException.class, () -> rateLimiter.confirmAllowed(testIp));
+        assertFalse(result);
     }
 
     @Test
-    @DisplayName("Redis 실패 시 요청을 허용해야 한다.")
-    public void shouldAllowRequestWhenRedisFails() {
+    @DisplayName("Redis 실패 시 요청을 차단해야 한다.")
+    public void shouldBlockRequestWhenRedisFails() {
         // given
         String testIp = "192.168.1.1";
-        when(valueOperations.increment(anyString())).thenReturn(null);
+        when(valueOperations.increment(anyString()))
+                .thenThrow(new RedisConnectionFailureException("Connection failed"));
 
-        // when & then
-        assertDoesNotThrow(() -> rateLimiter.confirmAllowed(testIp));
+        // when
+        boolean result = rateLimiter.confirmAllowed(testIp);
+
+        // then
+        assertFalse(result);
+        verify(valueOperations).increment(contains("burst:" + testIp));
     }
 }

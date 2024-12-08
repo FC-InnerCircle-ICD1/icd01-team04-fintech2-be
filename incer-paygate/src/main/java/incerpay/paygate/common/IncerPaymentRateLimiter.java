@@ -2,6 +2,7 @@ package incerpay.paygate.common;
 
 import incerpay.paygate.common.exception.IncerPayRateLimitException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
@@ -39,8 +40,11 @@ public class IncerPaymentRateLimiter {
                 throw new IncerPayRateLimitException("시도 횟수 초과");
             }
 
-            return isAllowed;
+            return true;
 
+        } catch (RedisConnectionFailureException e) {
+            log.error("Redis connection failed while incrementing: {}", e.getMessage());
+            return false;
         } catch (Exception e) {
             log.error("Rate limiting failed for IP: {}", ip, e);
             return false;
