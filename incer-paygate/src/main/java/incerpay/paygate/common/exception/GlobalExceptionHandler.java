@@ -77,5 +77,12 @@ public class GlobalExceptionHandler {
         return Response.fail(errorMessage);
     }
 
+    @ExceptionHandler(IncerPayRateLimitException.class)
+    public Response handleRateLimitException(IncerPaymentStoreApiFeignException ex) {
+        String errorMessage = ex.getMessage()  != null ? ex.getMessage() : "Bad request";
+        log.error(errorMessage, ex);
+        return Response.fail(errorMessage);
+    }
+
 
 }
