@@ -5,8 +5,11 @@ services:
     image: incer-paygate:0.0.1-SNAPSHOT
     depends_on:
       - mongodb
+      - redis
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/paymentDB
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
     ports:
       - "8080:8080"
     networks:
@@ -41,6 +44,14 @@ services:
     container_name: mongodb
     ports:
       - "27017:27017"
+    networks:
+      - incerpay_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
     networks:
       - incerpay_network
 

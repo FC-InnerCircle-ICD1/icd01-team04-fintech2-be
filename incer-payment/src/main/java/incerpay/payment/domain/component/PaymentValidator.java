@@ -1,14 +1,39 @@
 package incerpay.payment.domain.component;
 
+import incerpay.payment.common.exception.PaymentThrottlingException;
 import incerpay.payment.common.exception.PaymentStateException;
+import incerpay.payment.common.lib.clock.ClockManager;
 import incerpay.payment.domain.entity.Payment;
 import incerpay.payment.domain.vo.PaymentState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.Instant;
+
 @RequiredArgsConstructor
 @Component
 public class PaymentValidator {
+
+
+    private final ClockManager clockManager;
+    private final PaymentRepository repository;
+
+    public void validateForQuote(Payment payment) {
+
+        String sellerId = payment.sellerId();
+
+        Instant threshold = clockManager.getClock().instant()
+                .minus(Duration.ofSeconds(3));
+
+        boolean hasRecentRequest = repository.existsBySellerIdAndCreatedAtAfter(
+                sellerId, threshold);
+
+        if (hasRecentRequest) {
+            throw new PaymentThrottlingException("3초 이내 재시도는 불가능합니다.");
+        }
+    }
+
     public void validateForChangeState(Payment payment) {
         if(payment.isExpired()){
             throw new PaymentStateException("만료된 결제입니다.");

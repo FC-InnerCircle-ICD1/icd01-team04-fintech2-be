@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +41,18 @@ public class PaymentRepositoryImplement implements PaymentRepository, PaymentVie
     @Override
     public Optional<Payment> findById(UUID paymentId) {
         return jpaRepository.findById(paymentId);
+    }
+
+    @Override
+    public boolean existsBySellerIdAndCreatedAtAfter(String sellerId, Instant threshold) {
+        Integer fetchOne = jpaQueryFactory
+                .selectOne()
+                .from(payment)
+                .where(payment.sellerId.eq(sellerId)
+                        .and(payment.paymentProperty.registeredAt.after(threshold)))
+                .fetchFirst();
+
+        return fetchOne != null;
     }
 
     @Override
