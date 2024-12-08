@@ -15,11 +15,11 @@ build: stop
 	docker build -t incer-celler:0.0.1-SNAPSHOT ./incer-celler
 	docker build -t incer-paygate:0.0.1-SNAPSHOT ./incer-paygate
 
-# 저장소 이외 서비스 중지
+# MySQL 이외 서비스 중지
 stop:
 	@echo "Docker Compose 서비스 중지"
-	docker-compose stop incer-payment incer-member incer-celler incer-paygate
-	docker-compose rm -f incer-payment incer-member incer-celler incer-paygate
+	docker-compose stop incer-payment incer-member incer-celler incer-paygate redis
+	docker-compose rm -f incer-payment incer-member incer-celler incer-paygate redis
 
 
 # 모든 로그 확인
