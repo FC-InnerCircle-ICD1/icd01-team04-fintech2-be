@@ -4,9 +4,12 @@ import incerpay.paygate.domain.enumeration.PaymentType;
 import incerpay.paygate.infrastructure.internal.IncerPaymentStoreCaller;
 import incerpay.paygate.infrastructure.internal.dto.SellerApiView;
 import incerpay.paygate.infrastructure.internal.dto.TermsApiView;
+import incerpay.paygate.presentation.dto.out.CardDataView;
 import incerpay.paygate.presentation.dto.out.ReadyView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -18,11 +21,17 @@ public class CardPaymentMethodAdapter implements PaymentMethodAdapter{
         this.caller = caller;
     }
 
-    public ReadyView findMethodsFor(PaymentType pv, String sellerKey) {
-        SellerApiView sellerView = caller.getSeller(Long.valueOf(sellerKey));
+    @Override
+    public List<CardDataView> getCardsInfo(PaymentType pv, Long sellerKey) {
+        SellerApiView sellerView = caller.getSeller(sellerKey);
+        return sellerView.getCardDataViewList();
+    }
+
+    public ReadyView getPaymentInfo(Long sellerKey) {
+        SellerApiView sellerView = caller.getSeller(sellerKey);
         TermsApiView termView = caller.getTerms();
         ReadyView view = ReadyView.from(sellerView, termView);
-        log.info("CardPaymentMethodAdapter.findMethodsFor: " + view.toString());
+        log.info("CardPaymentMethodAdapter.getPaymentInfo: " + view.toString());
         return view;
     }
 

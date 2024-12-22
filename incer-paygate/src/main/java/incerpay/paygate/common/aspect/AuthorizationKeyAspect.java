@@ -2,14 +2,10 @@ package incerpay.paygate.common.aspect;
 
 import incerpay.paygate.common.auth.AuthorizationPublicKeyVerifier;
 import incerpay.paygate.common.auth.AuthorizationSecretKeyVerifier;
-import incerpay.paygate.presentation.dto.in.PaymentApproveCommand;
-import incerpay.paygate.presentation.dto.in.PaymentCancelCommand;
-import incerpay.paygate.presentation.dto.in.PaymentRejectCommand;
-import incerpay.paygate.presentation.dto.in.PaymentRequestCommand;
 import jakarta.servlet.http.HttpServletRequest;
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +31,8 @@ public class AuthorizationKeyAspect {
     }
 
 
-    @Before("@annotation(AuthorizationPublicKeyHeader) || @annotation(AuthorizationSecretKeyHeader)")
-    public void checkAuthorization(JoinPoint joinPoint) {
+    @Around("@annotation(AuthorizationPublicKeyHeader) || @annotation(AuthorizationSecretKeyHeader)")
+    public Object checkAuthorization(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
 
@@ -51,7 +47,6 @@ public class AuthorizationKeyAspect {
         log.info("Authorization apiKey: {}, apiKeyState: {}, sellerId : {}", apiKey, apiKeyState, sellerId);
 
 
-
         if (method.isAnnotationPresent(AuthorizationPublicKeyHeader.class)) {
             authorizationPublicKeyVerifier.verify(sellerId, apiKey, apiKeyState);
         }
@@ -59,5 +54,9 @@ public class AuthorizationKeyAspect {
             authorizationSecretKeyVerifier.verify(sellerId, apiKey, apiKeyState);
         }
 
+        Object[] args = joinPoint.getArgs();
+        args[0] = sellerId;
+
+        return joinPoint.proceed(args);
     }
 }
