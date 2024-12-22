@@ -4,11 +4,15 @@ import incerpay.paygate.common.exception.InvalidApiKeyException;
 import incerpay.paygate.domain.enumeration.ApiKeyState;
 import incerpay.paygate.infrastructure.internal.dto.ApiKeyInfo;
 import incerpay.paygate.infrastructure.internal.dto.SellerApiView;
+import incerpay.paygate.infrastructure.internal.dto.SellerCacheView;
 import incerpay.paygate.infrastructure.internal.dto.TermsApiView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class IncerPaymentStoreCaller {
@@ -37,15 +41,15 @@ public class IncerPaymentStoreCaller {
         return true;
     }
 
-    public SellerApiView getSeller(Long sellerId) {
+    @Cacheable(value = "seller", cacheManager = "redisCacheManager")
+    public SellerCacheView getSeller(Long sellerId) {
 
         ResponseEntity<SellerApiView> view = api.getSeller(sellerId);
         isValidResponse(view);
-
-        return view.getBody();
+        return SellerCacheView.from(Objects.requireNonNull(view.getBody()));
     }
 
-
+    @Cacheable(value = "terms", cacheManager = "caffeineCacheManager")
     public TermsApiView getTerms() {
 
         ResponseEntity<TermsApiView> view = api.getPaymentTerms();

@@ -14,6 +14,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @Aspect
 @Component
@@ -56,6 +57,8 @@ public class AuthorizationKeyAspect {
 
         Object[] args = joinPoint.getArgs();
         args[0] = sellerId;
+
+        log.info("args: {}, sellerId : {}", Arrays.toString(args), sellerId);
 
         return joinPoint.proceed(args);
     }

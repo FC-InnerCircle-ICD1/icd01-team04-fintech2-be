@@ -12,5 +12,4 @@ public interface PaymentMethodAdapter {
 
     ReadyView getPaymentInfo(Long sellerKey);
 
-
 }
