@@ -2,6 +2,7 @@ package incerpay.paygate.infrastructure.internal;
 
 import incerpay.paygate.domain.enumeration.ApiKeyState;
 import incerpay.paygate.infrastructure.internal.dto.SellerApiView;
+import incerpay.paygate.infrastructure.internal.dto.TermsApiView;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,5 +22,8 @@ public interface IncerPaymentStoreApi {
 
     @GetMapping("/seller/{sellerId}")
     ResponseEntity<SellerApiView> getSeller(@PathVariable Long sellerId);
+
+    @GetMapping("/terms")
+    ResponseEntity<TermsApiView> getPaymentTerms();
 
 }

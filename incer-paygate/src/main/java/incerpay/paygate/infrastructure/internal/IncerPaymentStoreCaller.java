@@ -4,6 +4,7 @@ import incerpay.paygate.common.exception.InvalidApiKeyException;
 import incerpay.paygate.domain.enumeration.ApiKeyState;
 import incerpay.paygate.infrastructure.internal.dto.ApiKeyInfo;
 import incerpay.paygate.infrastructure.internal.dto.SellerApiView;
+import incerpay.paygate.infrastructure.internal.dto.TermsApiView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,16 @@ public class IncerPaymentStoreCaller {
 
         return view.getBody();
     }
+
+
+    public TermsApiView getTerms() {
+
+        ResponseEntity<TermsApiView> view = api.getPaymentTerms();
+        isValidResponse(view);
+
+        return view.getBody();
+    }
+
 
     private boolean isValidResponse(ResponseEntity<?> rawResponse) {
         return rawResponse.getStatusCode().is2xxSuccessful();

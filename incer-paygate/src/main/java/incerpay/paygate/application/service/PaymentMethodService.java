@@ -14,7 +14,7 @@ public class PaymentMethodService {
     private final PaymentMethodAdapter viewer;
 
     @Transactional(readOnly = true)
-    public CardsView findMethodsFor(PaymentType paymentType, String sellerKey) {
+    public ReadyView getPaymentInfo(PaymentType paymentType, String sellerKey) {
         return viewer.findMethodsFor(paymentType, sellerKey);
     }
 

@@ -6,6 +6,6 @@ import incerpay.paygate.presentation.dto.out.*;
 
 public interface PaymentMethodAdapter {
 
-    CardsView findMethodsFor(PaymentType pv, String sellerKey);
+    ReadyView findMethodsFor(PaymentType pv, String sellerKey);
 
 }
