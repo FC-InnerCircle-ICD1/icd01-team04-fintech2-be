@@ -9,6 +9,7 @@ import incerpay.paygate.infrastructure.internal.dto.TermsApiView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -19,26 +20,39 @@ public class IncerPaymentStoreCaller {
 
     private static final String BEARER_PREFIX = "Bearer ";
     private final IncerPaymentStoreApi api;
-    public IncerPaymentStoreCaller(IncerPaymentStoreApi api) {
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public IncerPaymentStoreCaller(IncerPaymentStoreApi api, RedisTemplate<String, Object> redisTemplate) {
         this.api = api;
+        this.redisTemplate = redisTemplate;
     }
     private static final Logger log = LoggerFactory.getLogger(IncerPaymentStoreCaller.class);
 
-    public boolean verifyPublicKey(Long sellerId, String apiKey, ApiKeyState apiKeyState) {
+    public ResponseEntity<Boolean> findKeyResponse(Long sellerId, String apiKey, ApiKeyState apiKeyState) {
 
-        apiKey = apiKey.substring(BEARER_PREFIX.length());
-        ResponseEntity<?> view = api.getApiKeyInfo(sellerId, apiKey, apiKeyState);
-        verifyApiKey(view, new ApiKeyInfo(apiKey, apiKeyState));
+        // Boolean 직렬화 저장 불가에 따른 명시적 저장
+        String redisKey = "publicKey::" + sellerId + ":" + apiKey + ":" + apiKeyState;
 
-        return true;
+        if(redisTemplate.opsForValue().get(redisKey) != null) {
+            return ResponseEntity.ok(true);
+        }
+
+        ResponseEntity<Boolean> response = api.getApiKeyInfo(sellerId, apiKey, apiKeyState);
+        redisTemplate.opsForValue().set(redisKey, "true");
+
+        return response;
     }
 
-    public boolean verifySecretKey(Long sellerId, String apiKey, ApiKeyState apiKeyState){
 
-        ResponseEntity<?> view = api.getApiKeyInfo(sellerId, apiKey, apiKeyState);
-        verifyApiKey(view, new ApiKeyInfo(apiKey, apiKeyState));
+    public boolean verifyPublicKey(Long sellerId, String apiKey, ApiKeyState apiKeyState) {
+        String cleanApiKey = apiKey.substring(BEARER_PREFIX.length());
+        ResponseEntity<?> response = findKeyResponse(sellerId, cleanApiKey, apiKeyState);
+        return verifyApiKey(response, new ApiKeyInfo(cleanApiKey, apiKeyState));
+    }
 
-        return true;
+    // 캐시 제외
+    public boolean verifySecretKey(Long sellerId, String apiKey, ApiKeyState apiKeyState) {
+        return Boolean.TRUE.equals(api.getApiKeyInfo(sellerId, apiKey, apiKeyState).getBody());
     }
 
     @Cacheable(value = "seller", cacheManager = "redisCacheManager")

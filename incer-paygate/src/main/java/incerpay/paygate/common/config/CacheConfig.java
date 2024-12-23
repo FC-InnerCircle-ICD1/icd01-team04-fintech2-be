@@ -19,6 +19,8 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Configuration
@@ -30,18 +32,20 @@ public class CacheConfig {
 
         log.info("Redis Cache Manager {}", connectionFactory);
 
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofDays(30))
-                .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
-                )
-                .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())
-                );
+        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+
+        Map<String, RedisCacheConfiguration> configMap = new HashMap<>();
+        configMap.put("seller", defaultConfig.entryTtl(Duration.ofDays(30)));
+        configMap.put("publicKey", defaultConfig.entryTtl(Duration.ofDays(7)));
+
+        log.error("Redis seller Config: {}", configMap.get("seller"));
+        log.error("Redis publicKey Config: {}", configMap.get("publicKey"));
 
         return RedisCacheManager.builder(connectionFactory)
-                .cacheDefaults(config)
-                .withCacheConfiguration("seller", config)
+                .cacheDefaults(defaultConfig)
+                .withInitialCacheConfigurations(configMap)
                 .build();
     }
 
