@@ -56,7 +56,7 @@ public class AuthorizationKeyAspect {
         }
 
         Object[] args = joinPoint.getArgs();
-        args[0] = sellerId;
+//        args[0] = sellerId;
 
         log.info("args: {}, sellerId : {}", Arrays.toString(args), sellerId);
 
