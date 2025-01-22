@@ -1,8 +1,12 @@
 package incerpay.paygate.domain.status;
 
+import incerpay.paygate.presentation.dto.in.IncerPaymentApiApproveCommand;
+import incerpay.paygate.presentation.dto.in.PaymentApproveCommand;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.UUID;
 
 
 @Getter
@@ -15,13 +19,15 @@ public class PaymentRealtimeState {
     private int saveRetryCount;
     private boolean isPaid;
     private boolean isSaved;
+    private PaymentApproveCommand paymentApproveCommand;
 
-    public PaymentRealtimeState(String paymentId, String transactionId) {
-        this.paymentId = paymentId;
-        this.transactionId = transactionId;
+    public PaymentRealtimeState(PaymentApproveCommand paymentApproveCommand) {
+        this.paymentId = paymentApproveCommand.paymentId().toString();
+        this.transactionId = paymentApproveCommand.transactionId().toString();
         this.saveRetryCount = 0;
         this.isPaid = false;
         this.isSaved = false;
+        this.paymentApproveCommand = paymentApproveCommand;
     }
 
     public void addRetryCount() {
@@ -43,6 +49,10 @@ public class PaymentRealtimeState {
             throw new IllegalStateException("이미 저장된 상태입니다.");
         }
         this.isSaved = true;
+    }
+
+    public IncerPaymentApiApproveCommand getPaymentApproveCommand() {
+        return new IncerPaymentApiApproveCommand(UUID.fromString(this.paymentId));
     }
 
 

@@ -55,23 +55,11 @@ public class CardApiAdapter implements PaymentApiAdapter {
     }
 
     @Override
-    public ApiAdapterView confirm(PaymentApproveCommand paymentApproveCommand) {
-        PaymentRealtimeState state = savePaymentRealTimeState(paymentApproveCommand);
-
-        try {
-            CardApiApproveView view = executePayment(paymentApproveCommand);
-            state.pay();
-            log.info("Payment completed successfully: {}", state);
-            paymentService.savePayment(state);
-            log.info("Payment state saved successfully: {}", state);
-            return createApiAdapterView(view);
-
-        } catch (Exception e) {
-            if (!handleRetry(state)) {
-                log.error("Retry limit exceeded or payment already completed for Payment ID: {}", state.getPaymentId(), e);
-            }
-            throw e;
-        }
+    public ApiAdapterView confirm(PaymentApproveCommand command) {
+        PaymentRealtimeState state = savePaymentRealTimeState(command);
+        CardApiApproveView view = executePayment(command);
+        state.pay();
+        return createApiAdapterView(view);
     }
 
     private CardApiApproveView executePayment(PaymentApproveCommand command) {
@@ -81,16 +69,6 @@ public class CardApiAdapter implements PaymentApiAdapter {
         return view;
     }
 
-    private boolean handleRetry(PaymentRealtimeState state) {
-        try {
-            state.addRetryCount();
-            paymentService.savePayment(state);
-            return true;
-        } catch (RuntimeException ex) {
-            log.warn("Retry failed for Payment ID: {}", state.getPaymentId(), ex);
-            return false;
-        }
-    }
 
     private ApiAdapterView createApiAdapterView(CardApiCertifyView view) {
         return new ApiAdapterView(
@@ -123,7 +101,7 @@ public class CardApiAdapter implements PaymentApiAdapter {
     }
 
     private PaymentRealtimeState savePaymentRealTimeState(PaymentApproveCommand command) {
-        PaymentRealtimeState state = new PaymentRealtimeState(command.paymentId().toString(), command.transactionId().toString());
+        PaymentRealtimeState state = new PaymentRealtimeState(command);
         paymentService.savePayment(state);
         return state;
     }
