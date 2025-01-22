@@ -1,12 +1,10 @@
 package incerpay.paygate.domain.status;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-
 import java.util.Optional;
-import java.util.UUID;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface PaymentRealtimeStateRepository extends MongoRepository<PaymentRealtimeState, String> {
 
-    Optional<PaymentRealtimeState> findByPaymentIdAndTransactionId(UUID transactionId, UUID paymentId);
-
+    Optional<PaymentRealtimeState> findByPaymentIdAndTransactionId(String paymentId, String transactionId);
 }

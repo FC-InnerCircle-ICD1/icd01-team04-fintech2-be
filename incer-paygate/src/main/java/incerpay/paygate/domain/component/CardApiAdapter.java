@@ -21,55 +21,75 @@ public class CardApiAdapter implements PaymentApiAdapter {
 
     public CardApiAdapter(CardPaymentApi api,
                           PaymentCardApiMapper mapper,
-                          PaymentRealtimeStateService paymentRealtimeStateService) {
+                          PaymentRealtimeStateService paymentService) {
         this.api = api;
         this.mapper = mapper;
-        this.paymentService = paymentRealtimeStateService;
+        this.paymentService = paymentService;
     }
 
     @Override
     public ApiAdapterView request(PaymentRequestCommand paymentRequestCommand) {
-
         CardApiCertifyCommand command = mapper.toApiCommand(paymentRequestCommand);
         CardApiCertifyView view = api.certify(command);
-        log.info("api.certify: " + view.toString());
+        log.info("api.certify: " + view);
 
         return createApiAdapterView(view);
     }
 
     @Override
     public ApiAdapterView cancel(PaymentCancelCommand paymentCancelCommand) {
-
         CardApiCancelCommand command = mapper.toApiCommand(paymentCancelCommand);
         CardApiCancelView view = api.cancel(command);
-        log.info("api.cancel: " + view.toString());
+        log.info("api.cancel: " + view);
 
         return createApiAdapterView(view);
     }
 
     @Override
     public ApiAdapterView reject(PaymentRejectCommand paymentRejectCommand) {
-
         CardApiCancelCommand command = mapper.toApiCommand(paymentRejectCommand);
         CardApiCancelView view = api.cancel(command);
-        log.info("api.reject: " + view.toString());
+        log.info("api.reject: " + view);
 
         return createApiAdapterView(view);
     }
 
     @Override
     public ApiAdapterView confirm(PaymentApproveCommand paymentApproveCommand) {
-
         PaymentRealtimeState state = savePaymentRealTimeState(paymentApproveCommand);
-        CardApiApproveCommand command = mapper.toApiCommand(paymentApproveCommand);
 
-        CardApiApproveView view = api.pay(command);
-        log.info("api.confirm: " + view.toString());
+        try {
+            CardApiApproveView view = executePayment(paymentApproveCommand);
+            state.pay();
+            log.info("Payment completed successfully: {}", state);
+            paymentService.savePayment(state);
+            log.info("Payment state saved successfully: {}", state);
+            return createApiAdapterView(view);
 
-        PaymentRealtimeState savedState = updatePayState(state);
-        log.info("updatePayState: " + savedState);
+        } catch (Exception e) {
+            if (!handleRetry(state)) {
+                log.error("Retry limit exceeded or payment already completed for Payment ID: {}", state.getPaymentId(), e);
+            }
+            throw e;
+        }
+    }
 
-        return createApiAdapterView(view);
+    private CardApiApproveView executePayment(PaymentApproveCommand command) {
+        CardApiApproveCommand apiCommand = mapper.toApiCommand(command);
+        CardApiApproveView view = api.pay(apiCommand);
+        log.info("Payment executed successfully: {}", view);
+        return view;
+    }
+
+    private boolean handleRetry(PaymentRealtimeState state) {
+        try {
+            state.addRetryCount();
+            paymentService.savePayment(state);
+            return true;
+        } catch (RuntimeException ex) {
+            log.warn("Retry failed for Payment ID: {}", state.getPaymentId(), ex);
+            return false;
+        }
     }
 
     private ApiAdapterView createApiAdapterView(CardApiCertifyView view) {
@@ -83,7 +103,6 @@ public class CardApiAdapter implements PaymentApiAdapter {
     }
 
     private ApiAdapterView createApiAdapterView(CardApiCancelView view) {
-
         return new ApiAdapterView(
                 view.paymentId(),
                 UUID.randomUUID(),
@@ -104,20 +123,8 @@ public class CardApiAdapter implements PaymentApiAdapter {
     }
 
     private PaymentRealtimeState savePaymentRealTimeState(PaymentApproveCommand command) {
-
-        PaymentRealtimeState state
-                = new PaymentRealtimeState(command.paymentId(), command.transactionId());
+        PaymentRealtimeState state = new PaymentRealtimeState(command.paymentId().toString(), command.transactionId().toString());
         paymentService.savePayment(state);
-
         return state;
     }
-
-
-    private PaymentRealtimeState updatePayState(PaymentRealtimeState state) {
-        state.pay();
-        return paymentService.savePayment(state);
-    }
-
-
 }
-

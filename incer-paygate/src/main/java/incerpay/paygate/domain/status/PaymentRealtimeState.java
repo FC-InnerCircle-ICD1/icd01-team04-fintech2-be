@@ -4,20 +4,19 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.UUID;
 
 @Getter
 @Document(collection = "paymentRealtimeState")
 public class PaymentRealtimeState {
 
     @Id
-    private UUID transactionId;
-    private UUID paymentId;
+    private String transactionId;
+    private String paymentId;
     private int saveRetryCount;
     private boolean isPaid;
     private boolean isSaved;
 
-    public PaymentRealtimeState(UUID paymentId, UUID transactionId) {
+    public PaymentRealtimeState(String paymentId, String transactionId) {
         this.paymentId = paymentId;
         this.transactionId = transactionId;
         this.saveRetryCount = 0;
@@ -33,13 +32,19 @@ public class PaymentRealtimeState {
     }
 
     public void pay() {
-        isPaid = true;
+        if (this.isPaid) {
+            throw new IllegalStateException("이미 결제된 상태입니다.");
+        }
+        this.isPaid = true;
     }
-
 
     public void save() {
-        isSaved = true;
+        if (this.isSaved) {
+            throw new IllegalStateException("이미 저장된 상태입니다.");
+        }
+        this.isSaved = true;
     }
+
 
     @Override
     public String toString() {
