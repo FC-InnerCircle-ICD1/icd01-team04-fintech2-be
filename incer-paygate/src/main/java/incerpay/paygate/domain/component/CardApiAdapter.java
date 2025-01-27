@@ -99,8 +99,8 @@ public class CardApiAdapter implements PaymentApiAdapter {
 
     private CardApiApproveView processExternalPayment(PaymentApproveCommand command) {
         log.info("Initiating external payment API call for paymentId: {}", command.paymentId());
-        CardApiApproveCommand apiCommand = prepareApiCommand(command);
         try {
+            CardApiApproveCommand apiCommand = mapper.toApiCommand(command);
             CardApiApproveView response = api.pay(apiCommand);
             log.info("Received response from external payment API: {}", response);
             return response;
@@ -108,11 +108,6 @@ public class CardApiAdapter implements PaymentApiAdapter {
             log.error("External payment API call failed. PaymentId: {}", command.paymentId(), e);
             throw new RuntimeException("External payment failed", e);
         }
-    }
-
-    private CardApiApproveCommand prepareApiCommand(PaymentApproveCommand command) {
-        log.info("Preparing API command for paymentId: {}", command.paymentId());
-        return mapper.toApiCommand(command);
     }
 
     private void logAndSavePaymentResponse(UUID paymentId, CardApiApproveView response) {
