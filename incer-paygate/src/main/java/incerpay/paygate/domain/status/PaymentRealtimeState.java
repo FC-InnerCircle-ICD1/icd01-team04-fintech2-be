@@ -37,7 +37,7 @@ public class PaymentRealtimeState {
         saveRetryCount++;
     }
 
-    public void pay() {
+    public void makePaid() {
         if (this.isPaid) {
             throw new IllegalStateException("이미 결제된 상태입니다.");
         }

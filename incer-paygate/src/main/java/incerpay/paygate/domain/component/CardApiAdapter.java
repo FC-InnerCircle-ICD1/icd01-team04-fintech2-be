@@ -1,5 +1,6 @@
 package incerpay.paygate.domain.component;
 
+import incerpay.paygate.domain.log.PaymentApiLogService;
 import incerpay.paygate.domain.status.PaymentRealtimeState;
 import incerpay.paygate.domain.status.PaymentRealtimeStateService;
 import incerpay.paygate.infrastructure.external.CardPaymentApi;
@@ -18,13 +19,16 @@ public class CardApiAdapter implements PaymentApiAdapter {
     private final CardPaymentApi api;
     private final PaymentCardApiMapper mapper;
     private final PaymentRealtimeStateService paymentService;
+    private final PaymentApiLogService paymentApiLogService;
 
     public CardApiAdapter(CardPaymentApi api,
                           PaymentCardApiMapper mapper,
-                          PaymentRealtimeStateService paymentService) {
+                          PaymentRealtimeStateService paymentService,
+                          PaymentApiLogService paymentLogService) {
         this.api = api;
         this.mapper = mapper;
         this.paymentService = paymentService;
+        this.paymentApiLogService = paymentLogService;
     }
 
     @Override
@@ -58,17 +62,71 @@ public class CardApiAdapter implements PaymentApiAdapter {
     public ApiAdapterView confirm(PaymentApproveCommand command) {
         PaymentRealtimeState state = savePaymentRealTimeState(command);
         CardApiApproveView view = executePayment(command);
-        state.pay();
+        state.makePaid(); // isPaid 업데이트
         return createApiAdapterView(view);
     }
 
+    private PaymentRealtimeState savePaymentRealTimeState(PaymentApproveCommand command) {
+        PaymentRealtimeState state = new PaymentRealtimeState(command);
+        paymentService.savePayment(state);
+        return state;
+    }
+
     private CardApiApproveView executePayment(PaymentApproveCommand command) {
-        CardApiApproveCommand apiCommand = mapper.toApiCommand(command);
-        CardApiApproveView view = api.pay(apiCommand);
+
+        log.info("Initiating payment execution for paymentId: {}", command.paymentId());
+
+        logAndSavePaymentRequest(command); 
+        CardApiApproveView view = processExternalPayment(command);
+        logAndSavePaymentResponse(command.paymentId(), view);
+
         log.info("Payment executed successfully: {}", view);
+
         return view;
     }
 
+    private void logAndSavePaymentRequest(PaymentApproveCommand command) {
+        log.info("Saving and logging payment request : {}", command);
+        try {
+            CardApiApproveCommand apiCommand = mapper.toApiCommand(command);
+            paymentApiLogService.saveRequestLog(command.paymentId(), apiCommand);
+            log.info("Saved request log for paymentId: {}", command.paymentId());
+        } catch (Exception e) {
+            log.error("Critical: Failed to save payment request log. PaymentId: {}", command.paymentId(), e);
+            throw new RuntimeException("결제 요청 기록 저장 실패. 결제를 진행할 수 없습니다.", e);
+        }
+    }
+
+    private CardApiApproveView processExternalPayment(PaymentApproveCommand command) {
+        log.info("Initiating external payment API call for paymentId: {}", command.paymentId());
+        CardApiApproveCommand apiCommand = prepareApiCommand(command);
+        try {
+            CardApiApproveView response = api.pay(apiCommand);
+            log.info("Received response from external payment API: {}", response);
+            return response;
+        } catch (Exception e) {
+            log.error("External payment API call failed. PaymentId: {}", command.paymentId(), e);
+            throw new RuntimeException("External payment failed", e);
+        }
+    }
+
+    private CardApiApproveCommand prepareApiCommand(PaymentApproveCommand command) {
+        log.info("Preparing API command for paymentId: {}", command.paymentId());
+        return mapper.toApiCommand(command);
+    }
+
+    private void logAndSavePaymentResponse(UUID paymentId, CardApiApproveView response) {
+        log.info("Saving and logging payment response: {}", response);
+        try {
+            paymentApiLogService.saveResponseLog(paymentId, response);
+            log.info("Saved response log for paymentId: {}", paymentId);
+        } catch (Exception e) {
+            log.error("Critical: Failed to save payment response log. PaymentId: {}", paymentId, e);
+            // TODO 관리자 알림 발송
+            paymentApiLogService.saveErrorLog(paymentId, e);
+            throw new RuntimeException("결제 응답 기록 저장 실패. 결제 취소가 필요할 수 있습니다.", e);
+        }
+    }
 
     private ApiAdapterView createApiAdapterView(CardApiCertifyView view) {
         return new ApiAdapterView(
@@ -98,11 +156,5 @@ public class CardApiAdapter implements PaymentApiAdapter {
                 view.state(),
                 view.price()
         );
-    }
-
-    private PaymentRealtimeState savePaymentRealTimeState(PaymentApproveCommand command) {
-        PaymentRealtimeState state = new PaymentRealtimeState(command);
-        paymentService.savePayment(state);
-        return state;
     }
 }
