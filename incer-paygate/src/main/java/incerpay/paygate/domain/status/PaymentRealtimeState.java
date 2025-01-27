@@ -44,7 +44,7 @@ public class PaymentRealtimeState {
         this.isPaid = true;
     }
 
-    public void save() {
+    public void makeSaved() {
         if (this.isSaved) {
             throw new IllegalStateException("이미 저장된 상태입니다.");
         }
