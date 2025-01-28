@@ -3,6 +3,7 @@ package incerpay.paygate.domain.status;
 import incerpay.paygate.presentation.dto.in.IncerPaymentApiApproveCommand;
 import incerpay.paygate.presentation.dto.in.PaymentApproveCommand;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -32,6 +33,13 @@ public class PaymentRealtimeState {
 
     public void addRetryCount() {
         if(saveRetryCount >= 3){
+            throw new RuntimeException("재시도 가능 횟수를 초과했습니다.");
+        }
+        saveRetryCount++;
+    }
+
+    public void addBatchRetryCount() {
+        if(saveRetryCount >= 5){
             throw new RuntimeException("재시도 가능 횟수를 초과했습니다.");
         }
         saveRetryCount++;
