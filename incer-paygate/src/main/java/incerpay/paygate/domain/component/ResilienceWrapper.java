@@ -3,6 +3,7 @@ package incerpay.paygate.domain.component;
 import io.github.resilience4j.bulkhead.Bulkhead;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.retry.Retry;
+import io.github.resilience4j.decorators.Decorators;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -26,16 +27,20 @@ public class ResilienceWrapper {
     }
 
     public <T> T execute(Supplier<T> supplier) {
-        return Retry.decorateSupplier(retry,
-                        CircuitBreaker.decorateSupplier(circuitBreaker,
-                                Bulkhead.decorateSupplier(bulkhead, supplier)))
+        return Decorators.ofSupplier(supplier)
+                .withBulkhead(bulkhead)
+                .withCircuitBreaker(circuitBreaker)
+                .withRetry(retry)
+                .decorate()
                 .get();
     }
 
     public <T> CompletableFuture<T> executeAsync(Supplier<T> supplier) {
-        Supplier<T> decoratedSupplier = Retry.decorateSupplier(retry,
-                CircuitBreaker.decorateSupplier(circuitBreaker,
-                        Bulkhead.decorateSupplier(bulkhead, supplier)));
+        Supplier<T> decoratedSupplier = Decorators.ofSupplier(supplier)
+                .withBulkhead(bulkhead)
+                .withCircuitBreaker(circuitBreaker)
+                .withRetry(retry)
+                .decorate();
 
         return CompletableFuture.supplyAsync(decoratedSupplier);
     }
