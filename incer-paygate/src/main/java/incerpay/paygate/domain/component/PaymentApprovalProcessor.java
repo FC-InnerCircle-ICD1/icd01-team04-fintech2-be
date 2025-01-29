@@ -6,8 +6,6 @@ import incerpay.paygate.infrastructure.external.dto.IncerPaymentApiDataView;
 import incerpay.paygate.infrastructure.internal.IncerPaymentApi;
 import incerpay.paygate.infrastructure.internal.dto.IncerPaymentApiView;
 import incerpay.paygate.presentation.dto.in.*;
-import io.github.resilience4j.retry.Retry;
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -21,38 +19,30 @@ public class PaymentApprovalProcessor {
 
     private final IncerPaymentApi incerPaymentApi;
     private final PaymentRealtimeStateService paymentService;
-    private final CircuitBreaker circuitBreaker;
-    private final Retry retry;
+    private final ResilienceWrapper resilienceWrapper;
 
     public PaymentApprovalProcessor(
             IncerPaymentApi incerPaymentApi,
             PaymentRealtimeStateService paymentService,
-            CircuitBreaker paymentCircuitBreaker,
-            Retry paymentRetry
+            ResilienceWrapper resilienceWrapper
     ) {
         this.incerPaymentApi = incerPaymentApi;
         this.paymentService = paymentService;
-        this.circuitBreaker = paymentCircuitBreaker;
-        this.retry = paymentRetry;
+        this.resilienceWrapper = resilienceWrapper;
     }
 
     public IncerPaymentApiView processApproval(
             PaymentApproveCommand paymentApproveCommand
     ) {
-
         PaymentRealtimeState state = getPaymentRealTimeState(paymentApproveCommand);
         log.debug("Retrieved realtime state: {}", state);
 
         try {
-            return circuitBreaker.executeSupplier(() -> trySyncPaymentApproval(state));
+            return resilienceWrapper.execute(() -> doPaymentApproval(state));
         } catch (RuntimeException e) {
             log.warn("Sync approval failed, attempting async process", e);
             return processAsyncApproval(paymentApproveCommand, state);
         }
-    }
-
-    private IncerPaymentApiView trySyncPaymentApproval(PaymentRealtimeState state) {
-        return retry.executeSupplier(() -> doPaymentApproval(state));
     }
 
     private IncerPaymentApiView doPaymentApproval(PaymentRealtimeState state) {
@@ -77,20 +67,15 @@ public class PaymentApprovalProcessor {
     }
 
     private CompletableFuture<IncerPaymentApiView> executeAsyncApproval(PaymentRealtimeState state) {
-        return new CompletableFuture<IncerPaymentApiView>().completeAsync(() ->
-                circuitBreaker.executeSupplier(() ->
-                        performPaymentApprovalWithRetry(state))
-        );
+        return resilienceWrapper.executeAsync(() -> performPaymentApprovalWithRetry(state));
     }
 
     private IncerPaymentApiView performPaymentApprovalWithRetry(PaymentRealtimeState state) {
         log.info("Performing payment approval with retry: " + state.toString());
-        return retry.executeSupplier(() -> {
-            if (!state.isSaved()) {
-                return doPaymentApproval(state);
-            }
-            throw new RuntimeException("Payment already saved");
-        });
+        if (!state.isSaved()) {
+            return doPaymentApproval(state);
+        }
+        throw new RuntimeException("Payment already saved");
     }
 
     private IncerPaymentApiView createFallbackView(
