@@ -24,8 +24,7 @@ public class AuthorizationPublicKeyVerifier {
     public boolean verify(Long sellerId, String apiKey, String apiKeyState) {
         ApiKeyInfo apiKeyInfo = new ApiKeyInfo(apiKey, apiKeyState);
         validateKey(apiKey);
-        incerPaymentStoreCaller.verifyPublicKey(sellerId, apiKey, apiKeyInfo.getApiKeyState());
-        return true;
+        return incerPaymentStoreCaller.verifyPublicKey(sellerId, apiKey, apiKeyInfo.getApiKeyState());
     }
 
     private boolean validateKey(String apiKey) {
