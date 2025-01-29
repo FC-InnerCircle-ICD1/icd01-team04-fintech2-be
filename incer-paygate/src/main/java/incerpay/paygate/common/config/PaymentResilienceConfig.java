@@ -1,10 +1,13 @@
 package incerpay.paygate.common.config;
 
-import lombok.extern.slf4j.Slf4j;
+import io.github.resilience4j.bulkhead.Bulkhead;
+import io.github.resilience4j.bulkhead.BulkheadConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +19,7 @@ public class PaymentResilienceConfig {
 
     private static final String CIRCUIT_BREAKER_NAME = "paymentCircuitBreaker";
     private static final String RETRY_NAME = "paymentRetry";
+    private static final String BULKHEAD_NAME = "paymentBulkhead";
 
     @Bean
     public CircuitBreaker paymentCircuitBreaker() {
@@ -72,5 +76,28 @@ public class PaymentResilienceConfig {
                         event.getLastThrowable().getMessage()));
 
         return retry;
+    }
+
+    @Bean
+    @Qualifier("paymentBulkhead")
+    public Bulkhead paymentBulkhead() {
+        BulkheadConfig config = BulkheadConfig.custom()
+                .maxConcurrentCalls(150)
+                .maxWaitDuration(Duration.ofMillis(500))
+                .build();
+
+        Bulkhead bulkhead = Bulkhead.of(BULKHEAD_NAME, config);
+
+        bulkhead.getEventPublisher()
+                .onCallPermitted(event -> log.debug("[{}] Call permitted",
+                        BULKHEAD_NAME))
+                .onCallRejected(event -> log.warn("[{}] Call rejected - max concurrent calls reached",
+                        BULKHEAD_NAME))
+                .onCallFinished(event -> log.debug("[{}] Call finished - available concurrent calls: {}/{}",
+                        BULKHEAD_NAME,
+                        bulkhead.getMetrics().getAvailableConcurrentCalls(),
+                        config.getMaxConcurrentCalls()));
+
+        return bulkhead;
     }
 }
