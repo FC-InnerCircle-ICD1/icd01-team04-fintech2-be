@@ -15,11 +15,14 @@ public class PaymentPersistenceAdapter {
 
     private final IncerPaymentApi incerPaymentApi;
     private final IncerPaymentApiMapper incerPaymentApiMapper;
+    private final PaymentApprovalProcessor paymentApprovalProcessor;
 
     public PaymentPersistenceAdapter(IncerPaymentApi incerPaymentApi,
-                                     IncerPaymentApiMapper incerPaymentApiMapper) {
+                                     IncerPaymentApiMapper incerPaymentApiMapper,
+                                     PaymentApprovalProcessor paymentApprovalProcessor) {
         this.incerPaymentApi = incerPaymentApi;
         this.incerPaymentApiMapper = incerPaymentApiMapper;
+        this.paymentApprovalProcessor = paymentApprovalProcessor;
     }
 
 
@@ -46,16 +49,16 @@ public class PaymentPersistenceAdapter {
         return paymentViewToPersistenceView(view);
     }
 
-
     public PersistenceView approve(PaymentApproveCommand paymentApproveCommand) {
-        IncerPaymentApiApproveCommand command = incerPaymentApiMapper.toApiCommand(paymentApproveCommand);
-        IncerPaymentApiView view = incerPaymentApi.approve(command);
-        log.info("incerPaymentApi.approve: " + view.toString());
+        log.info("Starting payment approval process for command: {}", paymentApproveCommand);
+        IncerPaymentApiView view = paymentApprovalProcessor.processApproval(paymentApproveCommand);
+        log.info("PaymentPersistenceAdapter.processApproval: " + view.toString());
         return paymentViewToPersistenceView(view);
     }
 
-    private PersistenceView paymentViewToPersistenceView(IncerPaymentApiView view) {
 
+    private PersistenceView paymentViewToPersistenceView(IncerPaymentApiView view) {
+        log.info("Converting IncerPaymentApiView to PersistenceView: " + view.toString());
         return new PersistenceView(
                 view.data().paymentId(),
                 UUID.randomUUID(),
@@ -65,4 +68,5 @@ public class PaymentPersistenceAdapter {
         );
 
     }
+
 }

@@ -8,4 +8,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(CardApproveDetails.class)
 })
 public interface PaymentApproveDetails {
+    Long getPrice();
 }
